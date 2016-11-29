@@ -1,13 +1,14 @@
 #include "Init.h"
 #include "FileHandler.h"
 
-void Init(char *Phase, char *Penguins, char *input, char *output) {
-    Penguins -= '0';            //char to int conversion
+void Init(char *Phase, int Penguins, char *input, char *output) {
     setPenguins(Penguins);
     setMoves(5);                //will be taken from the board
     setPhase(Phase);
     boardLoad(input);
     scoreLoad(input);
+    boardPrint();
+    scorePrint();
 
     if(getPenguins() > 0) running = true;
     //input = fopen(InBoard, "r");

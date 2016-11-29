@@ -9,10 +9,10 @@ int main(int argc, char *argv[])
     } else
     if(argc == 5) {
         char *phase = argv[1]+6;
-        char *penguins = argv[2]+9;
+        int penguins = atoi(argv[2]+9);
         char *input = argv[3];
         char *output = argv[4];
-        Init(phase, *penguins, input, output);
+        Init(phase, penguins, input, output);
     } else
     running = false;
 

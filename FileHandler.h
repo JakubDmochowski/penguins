@@ -12,6 +12,7 @@
 FILE *input, *output;
 
 void scoreLoad(void *filename);
+void scoreAdd(int player, int amount);
 void scorePrint();
 
 void boardRandom();

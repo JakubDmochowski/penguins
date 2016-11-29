@@ -20,6 +20,10 @@ void scoreLoad(void *filename){
     fclose(input);
 }
 
+void scoreAdd(int player, int amount){
+    score[player - 1] += amount;
+}
+
 void scorePrint(){
     int i;
     for(i = 0; i < NR_OF_PLAYERS; i++){

@@ -9,8 +9,8 @@ void Init(char *Phase, int Penguins, char *input, char *output) {
     setPhase(Phase);
     boardLoad(input);
     scoreLoad(input);
-    boardPrint();
     scorePrint();
+    boardPrint();
     //input = fopen(InBoard, "r");
     //output = fopen(OutBoard, "w");
 };

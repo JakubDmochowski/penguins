@@ -31,10 +31,11 @@ void scoreAdd(int player, int amount){
 
 void scorePrint(){
     int i;
+    printf("\nSCORES:\n");
     for(i = 0; i < NR_OF_PLAYERS; i++){
-        printf("P%d score:%d\n", i + 1, score[i]);
+        printf("|   P%d: %d   |", i+1, score[i]);
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 

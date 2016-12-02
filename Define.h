@@ -8,6 +8,6 @@
 
 #define INTERACTIVE
 
-#define MAs
+#define MAC
 
 #endif // _DEFINE_

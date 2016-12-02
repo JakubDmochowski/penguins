@@ -1,5 +1,4 @@
 #include "Init.h"
-#include "FileHandler.h"
 
 void Init(char *Phase, int Penguins, char *input, char *output) {
     setPenguins(Penguins);
@@ -8,8 +7,8 @@ void Init(char *Phase, int Penguins, char *input, char *output) {
     boardLoad(input);
     scoreLoad(input);
     //boardRandom();
-    boardPrint();
     scorePrint();
+    boardPrint();
 
     if(getPenguins() > 0) running = true;
     //input = fopen(InBoard, "r");

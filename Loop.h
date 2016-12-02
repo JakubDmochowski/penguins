@@ -1,3 +1,9 @@
+#include <string.h>
+
+#include "Placement.h"
+#include "Init.h"
+#include "Movement.h"
+
 #ifndef _LOOP_
     #define _LOOP_
 

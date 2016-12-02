@@ -4,9 +4,7 @@ project(app)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
-    Collisions.c
-    Collisions.h
-    FileHandler.c
+        FileHandler.c
     FileHandler.h
     Init.c
     Init.h

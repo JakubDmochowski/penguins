@@ -2,20 +2,18 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/Placement.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Placement.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Init.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Collisions.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Init.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Collisions.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Movement.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FileHandler.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Movement.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Loop.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FileHandler.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Loop.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Placement.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Movement.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Init.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Loop.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Init.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FileHandler.c" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">

@@ -38,37 +38,36 @@ void scorePrint(){
 }
 
 void boardPrint() {
-    int i, j, score = 0;
+    int x, y, score = 0;
 
     //Prints column's numbers
     printf("\t");
-    for (i = 0; i < BOARD_SIZE_X; i++, score = 0) {
-        for (j = 0; j < BOARD_SIZE_Y; j++) {
-            score += board[i][j];
+    for (x = 0; x < BOARD_SIZE_X; x++, score = 0) {
+        for (y = 0; y < BOARD_SIZE_Y; y++) {
+            score += board[x][y];
         }
         if (score != 0) {
-            if (i < 10)
-                printf("   %d   %d", i, i);
-            if (i >= 10)
-                printf("  %d  %d", i, i);
+            if (x < 10)
+                printf("   %d   %d", x, x);
+            if (x >= 10)
+                printf("  %d  %d", x, x);
         }
     }
     printf("\n\n");
 
-    for (i = 0; i < BOARD_SIZE_X; i++) {
-        int score;
-        for (j = 0, score = 0; j < BOARD_SIZE_Y; j++) {
-            score += board[i][j];
+    for (y = 0; y < BOARD_SIZE_Y; y++) {
+        for (x = 0, score = 0; x < BOARD_SIZE_Y; x++) {
+            score += board[x][y];
         }
 
-        if (score != 0) {
+       if (score != 0) {
             printf("\t");
-            for (j = 0; j < BOARD_SIZE_Y; ++j) {
+            for (x = 0; x < BOARD_SIZE_X; ++x) {
 
-                if ((j == 0) && (i % 2))
+                if ((x == 0) && (y % 2))
                     printf("    ");
 
-                if (board[i][j] == 0)
+                if (board[x][y] == 0)
                     printf("        ");
                 else
                     printf(" /   \\  ");
@@ -76,32 +75,32 @@ void boardPrint() {
             printf("\n");
 
             //Prints row's numbers
-            printf("%d\t", i);
+            printf("%d\t", y);
 
 
-            for (j = 0; j < BOARD_SIZE_Y; ++j) {
+            for (x = 0; x < BOARD_SIZE_X; ++x) {
 
-                if ((j == 0) && (i % 2))
+                if ((x == 0) && (y % 2))
                     printf("    ");
 
-                if (board[i][j] == 0)
+                if (board[x][y] == 0)
                     printf("        ");
-                else if (board[i][j] > 3)
-                    printf("| P %d | ", (board[i][j]) - 3);
+                else if (board[x][y] > 3)
+                    printf("| P %d | ", (board[x][y]) - 3);
                 else
-                    printf("|  %d  | ", board[i][j]);
+                    printf("|  %d  | ", board[x][y]);
 
             }
 
             printf("\n");
 
             printf("\t");
-            for (j = 0; j < BOARD_SIZE_Y; ++j) {
+            for (x = 0; x < BOARD_SIZE_X; ++x) {
 
-                if ((j == 0) && (i % 2))
+                if ((x == 0) && (y % 2))
                     printf("    ");
 
-                if (board[i][j] == 0)
+                if (board[x][y] == 0)
                     printf("        ");
                 else
                     printf(" \\___/  ");
@@ -115,8 +114,8 @@ void boardRandom() {
     int i, j;
     srand(time(NULL));
     for (i = 0; i < BOARD_SIZE_Y; i++) {
-        for (j = 0; j < BOARD_SIZE_X; ++j) {
-            board[i][j] = rand() % 6;
+        for (j = 0; j < BOARD_SIZE_X; j++) {
+            board[j][i] = rand() % 6;
         }
     }
 }
@@ -148,13 +147,13 @@ void boardLoad(void *filename){
     while(fscanf(input, "%c", &temp) != EOF){
         if(temp == ',') continue;
         if(temp == ';'){
-            i++;
-            j = 0;
+            j++;
+            i = 0;
             fscanf(input, "%c", &temp);
             continue;
         }
         board[i][j] = (temp - '0');
-        j++;
+        i++;
     }
     fclose(input);
 }

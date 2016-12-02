@@ -1,36 +1,29 @@
 #include "Placement.h"
+#include "FileHandler.h"
+#include "Define.h"
 
-void Placement(){
-    printf("Placement phase here\n");
-    userPlacePenguin();
-    setPenguins(getPenguins() - 1);
-    scorePrint();
-    boardPrint();
+void Placement(int player){
+    int x, y;
+    do{
+        #ifdef INTERACTIVE
+        printf("Type coordinates of place to put penguin: (X Y) (-1 -1 if no moves are possible)\n");
+        scanf("%d %d", &x, &y);
+        if(x == -1 && y == -1)return;
+        #else
+            //here algorithm will tell x and y for penguin placement
+        #endif
+        if(placementValid(x, y)) {
+            placePenguin(player, x, y);
+            return;
+        } else printf("Invalid Move\n");
+    } while(1);
 };
 
-void userPlacePenguin() {
-    int x,y, isCorrect = 0;
-    do {
-        printf("Where would you like to place penguin?\n");
-        printf("Please enter coordinate X:\n");
-        scanf("%d\n", &x);
-        printf("Please enter coordinate Y:\n");
-        scanf("%d\n", &y);
-
-        isCorrect = placePenguin(1, y, x);
-
-        if (isCorrect == 1) {
-            printf("You gave invalid cooridnates. Please try again.\n");
-        }
-    } while (isCorrect);
-
+void placePenguin(int player,int x, int y){
+    scoreAdd(player, board[x][y]);
+    board[x][y] = player + 3;
 }
 
-int placePenguin(int player,int x, int y) {
-    if(board[y][x] != 1){
-        return 1;
-    }
-    scoreAdd(player, board[y][x]);
-    board[y][x] = player + 3;
-    return 0;
+int placementValid(int x, int y){
+    return board[x][y] == 1;
 }

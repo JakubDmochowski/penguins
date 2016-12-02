@@ -1,16 +1,14 @@
-#include <string.h>
-
-#include "Placement.h"
-#include "Init.h"
-#include "Movement.h"
-
 #ifndef _LOOP_
     #define _LOOP_
+
+#include "Define.h"
 
 enum phase {
     PLACEMENT,
     MOVEMENT
 };
+
+int turn;
 
 void setPhase(char *P);
 void Loop();

@@ -1,6 +1,7 @@
+#include <string.h>
+#include <time.h>
 #include "FileHandler.h"
-
-#define MAC
+#include "Define.h"
 
 void scoreLoad(void *filename){
     int player;
@@ -8,9 +9,9 @@ void scoreLoad(void *filename){
     char tmp[1];
     char Directory[64];
     #ifdef MAC
-        strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
-    #else WINDOWS
-        strcpy(Directory, "./");
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #else
+    strcpy(Directory, "./");
     #endif // MAC
     strcat(Directory, filename);
     input = fopen(Directory, "r");
@@ -30,12 +31,12 @@ void scoreAdd(int player, int amount){
 
 void scorePrint(){
     int i;
-    printf("\nSCORES:\n");
     for(i = 0; i < NR_OF_PLAYERS; i++){
-        printf("|\tP%d: %d\t|", i, score[i]);
+        printf("P%d score:%d\n", i + 1, score[i]);
     }
-    printf("\n\n");
+    printf("\n");
 }
+
 
 void boardPrint() {
     int x, y, score = 0;
@@ -114,21 +115,21 @@ void boardRandom() {
     int i, j;
     srand(time(NULL));
     for (i = 0; i < BOARD_SIZE_Y; i++) {
-        for (j = 0; j < BOARD_SIZE_X; j++) {
-            board[j][i] = rand() % 6;
+        for (j = 0; j < BOARD_SIZE_X; ++j) {
+            board[j][i] = rand() % 4;
         }
     }
 }
 
 
 void boardLoad(void *filename){
-    int i, j;
+    int x, y, fillx, filly;
     char temp;
     char Directory[64];
     #ifdef MAC
-        strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
-    #else WINDOWS
-        strcpy(Directory, "./");
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #else
+    strcpy(Directory, "./");
     #endif // MAC
     strcat(Directory, filename);
     input = fopen(Directory, "r");
@@ -136,8 +137,10 @@ void boardLoad(void *filename){
         printf("Error");
         return;
     }
-    i = 0;
-    j = 0;
+    x= 0;
+    y = 0;
+    fillx = 0;
+    filly = 0;
     //ignores score in file reading
     while(temp != ';'){
         fscanf(input, "%c", &temp);
@@ -147,13 +150,29 @@ void boardLoad(void *filename){
     while(fscanf(input, "%c", &temp) != EOF){
         if(temp == ',') continue;
         if(temp == ';'){
-            j++;
-            i = 0;
+            y++;
+            x = 0;
             fscanf(input, "%c", &temp);
+            while(fillx < BOARD_SIZE_X){
+                board[fillx][y] = 0;
+                fillx++;
+            }
+            fillx = 0;
+            filly++;
             continue;
         }
-        board[i][j] = (temp - '0');
-        i++;
+        board[x][y] = (temp - '0');
+        x++;
+        fillx++;
+    }
+    fillx = 0;
+    while(filly < BOARD_SIZE_Y){
+        while(fillx < BOARD_SIZE_X){
+            board[fillx][filly] = 0;
+            fillx++;
+        }
+        fillx = 0;
+        filly++;
     }
     fclose(input);
 }

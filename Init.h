@@ -3,10 +3,6 @@
 
 #include <stdbool.h>
 
-#include "FileHandler.h"
-#include "Movement.h"
-#include "Loop.h"
-
 int penguins;
 bool running;
 

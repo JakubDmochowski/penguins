@@ -7,6 +7,7 @@ void Init(char *Phase, int Penguins, char *input, char *output) {
     setPhase(Phase);
     boardLoad(input);
     scoreLoad(input);
+    //boardRandom();
     boardPrint();
     scorePrint();
 

@@ -8,7 +8,7 @@ void Placement(){
 };
 
 void placePenguin(int player,int x, int y){
-    if(board[y][x] > 1){
+    if(board[y][x] != 1){
         printf("Invalid Move\n");
         return;
     }

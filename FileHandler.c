@@ -7,7 +7,10 @@ void scoreLoad(void *filename){
     int temp[1];
     char tmp[1];
     char Directory[64];
-    strcpy(Directory, "./");
+    //For mac
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    //For Windows
+    //strcpy(Directory, "./");
     strcat(Directory, filename);
     input = fopen(Directory, "r");
     player = 0;
@@ -106,9 +109,16 @@ void boardLoad(void *filename){
     int i, j;
     char temp;
     char Directory[64];
-    strcpy(Directory, "./");
+    //For mac
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    //For Windows
+    //(Directory, "./");
     strcat(Directory, filename);
     input = fopen(Directory, "r");
+    if (input == NULL) {
+        printf("Error");
+        return;
+    }
     i = 0;
     j = 0;
     //ignores score in file reading

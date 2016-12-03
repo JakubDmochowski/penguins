@@ -3,6 +3,7 @@
 #include "Placement.h"
 #include "Movement.h"
 #include "Define.h"
+#include "Init.h"
 
 phase = PLACEMENT;
 turn = 1;
@@ -16,16 +17,22 @@ void Loop(){                                        //during one round we place 
     //GetCommands();
     if(phase == PLACEMENT){
         Placement(((turn - 1) % NR_OF_PLAYERS) + 1);
-        #ifdef INTERACTIVE
+#ifdef INTERACTIVE
         scorePrint();
         boardPrint();
-        #else
-        #endif
+#else
+#endif
         if((getPenguins() == (turn / NR_OF_PLAYERS)) && ((turn % NR_OF_PLAYERS == 0))) phase = MOVEMENT;
         turn++;
     }
     if(phase == MOVEMENT) {
         Movement(((turn - 1) % NR_OF_PLAYERS) + 1);
-        setRunning(0);
+
+        #ifdef INTERACTIVE
+        scorePrint();
+        boardPrint();
+#else
+#endif
+        turn++;
     }
 };

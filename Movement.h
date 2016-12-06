@@ -19,7 +19,8 @@ int checkFirstMove(coordinates penguin, step *movesAvailable);
 int addFloeToList(coordinates penguin, step *movesAvailable, int counter, int shiftX, int shiftY, char* name);
 coordinates makeStep (coordinates penguin, coordinates floe, int player);
 int moveChoose(int numberOfPossibleMoves);
-int ifStepForward();
-coordinates makeStepForwardCoordinates(coordinates penguin, coordinates step);
+int ifStepForward(coordinates step);
+coordinates makeStepForwardCoordinates(coordinates penguin, step step);
+void changeNextMoveCoordinates(step *move);
 
 #endif // _MOVEMENT_

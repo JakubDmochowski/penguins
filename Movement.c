@@ -2,6 +2,7 @@
 #include "Define.h"
 #include "FileHandler.h"
 #include "Init.h"
+#include "String.h"
 
 void Movement(int player){
 #ifdef INTERACTIVE
@@ -21,11 +22,14 @@ void Movement(int player){
         chosenMove = moveChoose(numberOfPossibleMoves);
 
         penguinToMove = makeStep(penguinToMove, movesAvailable[chosenMove - 1].coordinates, player);
+        //changeNextMoveCoordinates(&movesAvailable[chosenMove - 1]);
         scorePrint();
         boardPrint();
 
-        while(ifStepForward()) {
-            penguinToMove = makeStep(penguinToMove, makeStepForwardCoordinates(penguinToMove, movesAvailable[chosenMove -1].stepForward), player);
+        while(ifStepForward(makeStepForwardCoordinates(penguinToMove, movesAvailable[chosenMove -1]))) {
+            penguinToMove = makeStep(penguinToMove, makeStepForwardCoordinates(penguinToMove, movesAvailable[chosenMove -1]), player);
+            changeNextMoveCoordinates(&movesAvailable[chosenMove - 1]);
+
             scorePrint();
             boardPrint();
         }
@@ -79,12 +83,16 @@ int moveChoose(int numberOfPossibleMoves) {
     } while (move <= 0 || move > numberOfPossibleMoves);
 
     return move;
+
 }
 
 int isFloeValid (coordinates floe) {
-    if (board[floe.x][floe.y] == 1 || board[floe.x][floe.y] == 2 || board[floe.x][floe.y] == 3)
-        return 1;
-    else
+    if (floe.x >= 0 && floe.y >= 0 && floe.x < BOARD_SIZE_X && floe.y < BOARD_SIZE_Y) {
+        if (board[floe.x][floe.y] == 1 || board[floe.x][floe.y] == 2 || board[floe.x][floe.y] == 3)
+            return 1;
+        else
+            return 0;
+    } else
         return 0;
 }
 
@@ -107,45 +115,68 @@ int addFloeToList(coordinates penguin, step *movesAvailable, int counter, int sh
 int checkFirstMove(coordinates penguin, step *movesAvailable) {
     int counter = 0;
 
-    //upper left
-    counter = addFloeToList(penguin, movesAvailable, counter, 0, -1, "upper-left");
-    //upper right
-    counter = addFloeToList(penguin, movesAvailable, counter, 1, -1, "upper-right");
-    //left
-    counter = addFloeToList(penguin, movesAvailable, counter, -1, 0, "left");
-    //right
-    counter = addFloeToList(penguin, movesAvailable, counter, 1, 0, "right");
-    //bottom left
-    counter = addFloeToList(penguin, movesAvailable, counter, 0, 1, "bottom-left");
-    //bottom right
-    counter = addFloeToList(penguin, movesAvailable, counter, 1, 1, "bottom-right");
+    switch(penguin.y % 2) {
+        case 0:
+            //upper left
+            counter = addFloeToList(penguin, movesAvailable, counter, -1, -1, "upper-left");
+            //upper right
+            counter = addFloeToList(penguin, movesAvailable, counter, 0, -1, "upper-right");
+            //left
+            counter = addFloeToList(penguin, movesAvailable, counter, -1, 0, "left");
+            //right
+            counter = addFloeToList(penguin, movesAvailable, counter, 1, 0, "right");
+            //bottom left
+            counter = addFloeToList(penguin, movesAvailable, counter, -1, 1, "bottom-left");
+            //bottom right
+            counter = addFloeToList(penguin, movesAvailable, counter, 0, 1, "bottom-right");
+            break;
+        case 1:
+            //upper left
+            counter = addFloeToList(penguin, movesAvailable, counter, 0, -1, "upper-left");
+            //upper right
+            counter = addFloeToList(penguin, movesAvailable, counter, 1, -1, "upper-right");
+            //left
+            counter = addFloeToList(penguin, movesAvailable, counter, -1, 0, "left");
+            //right
+            counter = addFloeToList(penguin, movesAvailable, counter, 1, 0, "right");
+            //bottom left
+            counter = addFloeToList(penguin, movesAvailable, counter, 0, 1, "bottom-left");
+            //bottom right
+            counter = addFloeToList(penguin, movesAvailable, counter, 1, 1, "bottom-right");
+            break;
+    }
 
     return counter;
 }
 
-int ifStepForward() {
+int ifStepForward(coordinates step) {
     char choice;
 
     while(1) {
-        printf("Would you like to do another step? (y/n)\n");
-        scanf(" %c", &choice);
+        if(isFloeValid(step)) {
+            printf("Would you like to do another step? (y/n)\n");
+            scanf(" %c", &choice);
 
-        switch (choice) {
-            case 'y':
-                return 1;
-            case 'n':
-                return 0;
-            default:
-                printf("Invalid choice. Please try again\n");
+            switch (choice) {
+                case 'y':
+                    return 1;
+                case 'n':
+                    return 0;
+                default:
+                    printf("Invalid choice. Please try again\n");
+            }
+        } else {
+            printf("No more moves in this direction available.\n");
+            return 0;
         }
     }
 }
 
-coordinates makeStepForwardCoordinates(coordinates penguin, coordinates step) {
+coordinates makeStepForwardCoordinates(coordinates penguin, step step) {
     coordinates finalCoordinates;
 
-    finalCoordinates.x = penguin.x + step.x;
-    finalCoordinates.y = penguin.y + step.y;
+    finalCoordinates.x = penguin.x + step.stepForward.x;
+    finalCoordinates.y = penguin.y + step.stepForward.y;
 
     return finalCoordinates;
 }
@@ -159,4 +190,18 @@ coordinates makeStep (coordinates penguin, coordinates floe, int player) {
     board[floe.x][floe.y] = board[penguin.x][penguin.y];
     board[penguin.x][penguin.y] = 0;
     return newPenguinPlace;
+}
+
+void changeNextMoveCoordinates(step *move) {
+    if ((move->stepForward.x == -1 && move->stepForward.y == -1 && !strcmp(move->name, "upper-left"))
+        || (move->stepForward.x == 0 && move->stepForward.y == -1 && !strcmp(move->name, "upper-right"))
+        || (move->stepForward.x == -1 && move->stepForward.y == 1 && !strcmp(move->name, "bottom-left"))
+        || (move->stepForward.x == 0 && move->stepForward.y == 1 && !strcmp(move->name, "bottom-right")))
+        move->stepForward.x++;
+
+    if ((move->stepForward.x == 0 && move->stepForward.y == -1 && !strcmp(move->name, "upper-left"))
+        || (move->stepForward.x == 1 && move->stepForward.y == -1 && !strcmp(move->name, "upper-right"))
+        || (move->stepForward.x == 0 && move->stepForward.y == 1 && !strcmp(move->name, "bottom-left"))
+        || (move->stepForward.x == 1 && move->stepForward.y == 1 && !strcmp(move->name, "bottom-right")))
+        move->stepForward.x--;
 }

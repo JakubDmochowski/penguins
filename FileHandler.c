@@ -2,17 +2,17 @@
 #include <time.h>
 #include "FileHandler.h"
 #include "Define.h"
+#include "System.h"
 
 void scoreLoad(void *filename){
     int player;
     int temp[1];
     char tmp[1];
     char Directory[64];
-    #ifdef MAC
-    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
-    #else
-    strcpy(Directory, "./");
-    #endif // MAC
+
+    if(sys == WINDOWS) strcpy(Directory, "./");
+    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+
     strcat(Directory, filename);
     input = fopen(Directory, "r");
     player = 0;
@@ -122,23 +122,21 @@ void boardRandom() {
     }
 }
 
-
 void boardLoad(void *filename){
     int x, y, fillx, filly;
     char temp;
     char Directory[64];
-    #ifdef MAC
-    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
-    #else
-    strcpy(Directory, "./");
-    #endif // MAC
+
+    if(sys == WINDOWS) strcpy(Directory, "./");
+    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+
     strcat(Directory, filename);
     input = fopen(Directory, "r");
     if (input == NULL) {
         printf("Error");
         return;
     }
-    x= 0;
+    x = 0;
     y = 0;
     fillx = 0;
     filly = 0;
@@ -174,6 +172,38 @@ void boardLoad(void *filename){
         }
         fillx = 0;
         filly++;
+    }
+    fclose(input);
+}
+void boardOut(void *filename){
+    int x, y, scP;
+    char Directory[64];
+
+    if(sys == WINDOWS) strcpy(Directory, "./");
+    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    strcat(Directory, filename);
+    output = fopen(Directory, "w");
+    if (output == NULL) {
+        printf("Error");
+        return;
+    }
+
+    //print player scores
+    for(scP = 0; scP < NR_OF_PLAYERS; scP++){
+        fprintf(output, "%d", score[scP]);
+        if(scP + 1 != NR_OF_PLAYERS) fprintf(output, ",");
+        else fprintf(output, ";");
+    }
+    fprintf(output, "\n");
+    // print board
+
+    for(y = 0; y < BOARD_SIZE_Y; y++){
+        for(x = 0; x < BOARD_SIZE_X; x++){
+            fprintf(output, "%d", board[x][y]);
+            if(x + 1 != BOARD_SIZE_X) fprintf(output, ",");
+            else fprintf(output, ";");
+        }
+        fprintf(output, "\n");
     }
     fclose(input);
 }

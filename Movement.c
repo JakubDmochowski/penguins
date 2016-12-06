@@ -6,6 +6,7 @@
 
 void Movement(int player){
 #ifdef INTERACTIVE
+        int i;
         coordinates penguinToMove;
         step movesAvailable[6];
         step *pointerMovesAvailable = movesAvailable;
@@ -16,7 +17,7 @@ void Movement(int player){
         penguinToMove = penguinsChoose(player);
         numberOfPossibleMoves = checkFirstMove(penguinToMove, pointerMovesAvailable);
         printf("Possible moves:\n");
-        for(int i = 0; i < numberOfPossibleMoves; i++) {
+        for(i = 0; i < numberOfPossibleMoves; i++) {
             printf("%d) On floe [%d,%d] (%s)\n", i + 1, movesAvailable[i].coordinates.x, movesAvailable[i].coordinates.y, movesAvailable[i].name);
         }
         chosenMove = moveChoose(numberOfPossibleMoves);

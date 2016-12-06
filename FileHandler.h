@@ -14,6 +14,7 @@ void scorePrint();
 void boardRandom();
 void boardPrint();
 void boardLoad(void *filename);
+void boardOut(void *filename);
 
 int score[NR_OF_PLAYERS];
 

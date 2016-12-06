@@ -3,19 +3,20 @@
 #include "Init.h"
 #include "Loop.h"
 #include "FileHandler.h"
+#include "System.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char *env[])
 {
-    running = true;
+    setRunning(1);
+    setSystem(env);
 #ifndef INTERACTIVE
     if(argc == 5) {
         char *phase = argv[1]+6;
         int penguins = atoi(argv[2]+9);
         char *input = argv[3];
-        char *output = argv[4];
-        Init(phase, penguins, input, output);
+        Init(phase, penguins, input);
     } else {
-    running = false;
+    setRunning(0);
     printf("NOT ENOUGH ARGUMENTS");
     }
 #else
@@ -28,13 +29,15 @@ int main(int argc, char *argv[])
         char *phase = argv[1]+6;
         int penguins = atoi(argv[2]+9);
         char *input = argv[3];
-        char *output = argv[4];
-        Init(phase, penguins, input, output);
-    } else running = false;
+        Init(phase, penguins, input);
+    } else setRunning(0);
 
 #endif
     while(running){
         Loop();
     }
+    boardOut(argv[4]);
+#ifndef INTERACTIVE
+#endif // INTERACTIVE
     return 0;
 }

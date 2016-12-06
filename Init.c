@@ -4,15 +4,13 @@
 #include "Movement.h"
 #include "Loop.h"
 
-void Init(char *Phase, int Penguins, char *input, char *output) {
+void Init(char *Phase, int Penguins, char *input) {
     setPenguins(Penguins);
     setPhase(Phase);
     boardLoad(input);
     scoreLoad(input);
     scorePrint();
     boardPrint();
-    //input = fopen(InBoard, "r");
-    //output = fopen(OutBoard, "w");
 };
 
 void definePenguins() {

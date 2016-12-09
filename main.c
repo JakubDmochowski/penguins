@@ -5,10 +5,14 @@
 #include "FileHandler.h"
 #include "System.h"
 
+void printPenguins();
+
 int main(int argc, char *argv[], char *env[])
 {
+    printPenguins();
     setRunning(1);
-    setSystem(env);
+    //setSystem(env);
+    sys = "mac";
 #ifndef INTERACTIVE
     if(argc == 5) {
         char *phase = argv[1]+6;
@@ -40,4 +44,13 @@ int main(int argc, char *argv[], char *env[])
 #ifndef INTERACTIVE
 #endif // INTERACTIVE
     return 0;
+}
+
+void printPenguins() {
+            printf(" _____  ______ _   _  _____ _    _ _____ _   _  _____ \n"
+                           "|  __ \\|  ____| \\ | |/ ____| |  | |_   _| \\ | |/ ____|\n"
+                           "| |__) | |__  |  \\| | |  __| |  | | | | |  \\| | (___  \n"
+                           "|  ___/|  __| | . ` | | |_ | |  | | | | | . ` |\\___ \\ \n"
+                           "| |    | |____| |\\  | |__| | |__| |_| |_| |\\  |____) |\n"
+                           "|_|    |______|_| \\_|\\_____|\\____/|_____|_| \\_|_____/ ");
 }

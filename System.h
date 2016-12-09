@@ -8,7 +8,7 @@ enum{
 
 int sys;
 
-void setSystem();
+void setSystem(char *env[]);
 int getSystem();
 
 #endif // _SYSTEM_

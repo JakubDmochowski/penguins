@@ -12,5 +12,6 @@ int turn;
 
 void setPhase(char *P);
 void Loop();
+void printGameOver();
 
 #endif // _LOOP_

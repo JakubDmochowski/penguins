@@ -8,7 +8,7 @@ void scoreLoad(void *filename){
     int player;
     int temp[1];
     char tmp[1];
-    char Directory[64];
+    char Directory[128];
 
     if(sys == WINDOWS) strcpy(Directory, "./");
     else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
@@ -125,7 +125,7 @@ void boardRandom() {
 void boardLoad(void *filename){
     int x, y, fillx, filly;
     char temp;
-    char Directory[64];
+    char Directory[128];
 
     if(sys == WINDOWS) strcpy(Directory, "./");
     else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
@@ -177,7 +177,7 @@ void boardLoad(void *filename){
 }
 void boardOut(void *filename){
     int x, y, scP;
-    char Directory[64];
+    char Directory[128];
 
     if(sys == WINDOWS) strcpy(Directory, "./");
     else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");

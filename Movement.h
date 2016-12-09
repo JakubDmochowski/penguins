@@ -21,6 +21,5 @@ coordinates makeStep (coordinates penguin, coordinates floe, int player);
 int moveChoose(int numberOfPossibleMoves);
 int ifStepForward(coordinates step);
 coordinates makeStepForwardCoordinates(coordinates penguin, step step);
-void changeNextMoveCoordinates(step *move);
 
 #endif // _MOVEMENT_

@@ -13,6 +13,7 @@ void Movement(int player){
         int numberOfPossibleMoves;
         int chosenMove;
         char *chosenMoveName;
+        step move;
 
         //Print an info
         printf("Turn of P%d\n", player);
@@ -39,16 +40,10 @@ void Movement(int player){
         boardPrint();
 
         //Rest of the moves
-        while(ifStepForward(makeStepForwardCoordinates(penguinToMove, movesAvailable[chosenMove -1]))) {
-            numberOfPossibleMoves = checkFirstMove(penguinToMove, pointerMovesAvailable);
-            for (i = 0; i < numberOfPossibleMoves; i++)
-                if (!strcmp(chosenMoveName, movesAvailable[i].name)) {
-                    chosenMove = i + 1;
-                    break;
-                }
-
-            penguinToMove = makeStep(penguinToMove, movesAvailable[chosenMove - 1].coordinates, player);
-
+        move = checkMove(penguinToMove, chosenMoveName);
+        while(ifStepForward(makeStepForwardCoordinates(penguinToMove, move))) {
+            penguinToMove = makeStep(penguinToMove, move.coordinates, player);
+            move = checkMove(penguinToMove, chosenMoveName);
             scorePrint();
             boardPrint();
         }
@@ -132,62 +127,102 @@ int addFloeToList(coordinates penguin, step *movesAvailable, int counter, int sh
 }
 
 int checkFirstMove(coordinates penguin, step *movesAvailable) {
-    int counter = 0;
+    int counter = 0, i;
+    char* names[6] = {"upper-left", "upper-right", "left", "right", "bottom-left", "bottom-right"};
 
-    switch(penguin.y % 2) {
-        case 0:
-            //upper left
-            counter = addFloeToList(penguin, movesAvailable, counter, -1, -1, "upper-left");
-            //upper right
-            counter = addFloeToList(penguin, movesAvailable, counter, 0, -1, "upper-right");
-            //left
-            counter = addFloeToList(penguin, movesAvailable, counter, -1, 0, "left");
-            //right
-            counter = addFloeToList(penguin, movesAvailable, counter, 1, 0, "right");
-            //bottom left
-            counter = addFloeToList(penguin, movesAvailable, counter, -1, 1, "bottom-left");
-            //bottom right
-            counter = addFloeToList(penguin, movesAvailable, counter, 0, 1, "bottom-right");
-            break;
-        case 1:
-            //upper left
-            counter = addFloeToList(penguin, movesAvailable, counter, 0, -1, "upper-left");
-            //upper right
-            counter = addFloeToList(penguin, movesAvailable, counter, 1, -1, "upper-right");
-            //left
-            counter = addFloeToList(penguin, movesAvailable, counter, -1, 0, "left");
-            //right
-            counter = addFloeToList(penguin, movesAvailable, counter, 1, 0, "right");
-            //bottom left
-            counter = addFloeToList(penguin, movesAvailable, counter, 0, 1, "bottom-left");
-            //bottom right
-            counter = addFloeToList(penguin, movesAvailable, counter, 1, 1, "bottom-right");
-            break;
+    for (i = 0; i < 6; i++) {
+        if (isFloeValid(checkMove(penguin, names[i]).coordinates)) {
+            movesAvailable[counter] = checkMove(penguin, names[i]);
+            counter++;
+        }
     }
 
     return counter;
 }
 
+step checkMove(coordinates penguin, char* name) {
+    if (!strcmp(name, "upper-left")) {
+        switch (penguin.y % 2) {
+            case 0:
+                return createMove(penguin, -1, -1, "upper-left");
+            case 1:
+                return createMove(penguin, 0, -1, "upper-left");
+        }
+    }
+
+    if (!strcmp(name, "upper-right")) {
+        switch (penguin.y % 2) {
+            case 0:
+                return createMove(penguin, 0, -1, "upper-right");
+            case 1:
+                return createMove(penguin, 1, -1, "upper-right");
+        }
+    }
+
+    if (!strcmp(name, "left")) {
+        return createMove(penguin, -1, 0, "left");
+    }
+
+    if (!strcmp(name, "right")) {
+        return createMove(penguin, 1, 0, "right");
+    }
+
+    if (!strcmp(name, "bottom-left")) {
+        switch (penguin.y % 2) {
+            case 0:
+                return createMove(penguin, -1, 1, "bottom-left");
+            case 1:
+                return createMove(penguin, 0, 1, "bottom-left");
+        }
+    }
+
+    if (!strcmp(name, "bottom-right")) {
+        switch (penguin.y % 2) {
+            case 0:
+                return createMove(penguin, 0, 1, "bottom-right");
+            case 1:
+                return createMove(penguin, 1, 1, "bottom-right");
+        }
+    }
+    
+}
+
+step createMove(coordinates penguin, int shiftX, int shiftY, char* directionName) {
+    step step;
+    coordinates currentFloe;
+    currentFloe.x = penguin.x + shiftX;
+    currentFloe.y = penguin.y + shiftY;
+    if (isFloeValid(currentFloe)) {
+        step.coordinates.x = currentFloe.x;
+        step.coordinates.y = currentFloe.y;
+        step.name = directionName;
+        step.stepForward.x = shiftX;
+        step.stepForward.y = shiftY;
+    }
+
+    return step;
+    }
+
 int ifStepForward(coordinates step) {
     char choice;
 
-    while(1) {
-        if(isFloeValid(step)) {
-            printf("Would you like to do another step? (y/n)\n");
-            scanf(" %c", &choice);
+    if(isFloeValid(step)) {
+        while(1) {
+                printf("Would you like to do another step? (y/n)\n");
+                scanf(" %c", &choice);
 
-            switch (choice) {
-                case 'y':
-                    return 1;
-                case 'n':
-                    return 0;
-                default:
-                    printf("Invalid choice. Please try again\n");
-            }
-        } else {
-            printf("No more moves in this direction available.\n");
-            return 0;
+                switch (choice) {
+                    case 'y':
+                        return 1;
+                    case 'n':
+                        return 0;
+                    default:
+                        printf("Invalid choice. Please try again\n");
+                }
         }
+    } else {
+        printf("No more moves in this direction available.\n");
+        return 0;
     }
 }
 

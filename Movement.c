@@ -20,32 +20,47 @@ void Movement(int player){
 
         //Choose a penguin to move
         penguinToMove = penguinsChoose(player);
-
-        //Find possible moves
         numberOfPossibleMoves = checkFirstMove(penguinToMove, pointerMovesAvailable);
-        printf("Possible moves:\n");
-        for(i = 0; i < numberOfPossibleMoves; i++) {
-            printf("%d) On floe [%d,%d] (%s)\n", i + 1, movesAvailable[i].coordinates.x, movesAvailable[i].coordinates.y, movesAvailable[i].name);
-        }
+        while (1) {
+        if (numberOfPossibleMoves != 0) {
+            printf("Possible moves:\n");
+            for (i = 0; i < numberOfPossibleMoves; i++) {
+                printf("%d) On floe [%d,%d] (%s)\n", i + 1, movesAvailable[i].coordinates.x,
+                       movesAvailable[i].coordinates.y, movesAvailable[i].name);
+            }
 
-        //Choose a direction
-        chosenMove = moveChoose(numberOfPossibleMoves);
-        chosenMoveName = movesAvailable[chosenMove - 1].name; //needed for next moves
+            //Choose a direction
+            chosenMove = moveChoose(numberOfPossibleMoves);
+            chosenMoveName = movesAvailable[chosenMove - 1].name; //needed for next moves
 
-        //Move penguin first time
-        penguinToMove = makeStep(penguinToMove, movesAvailable[chosenMove - 1].coordinates, player);
+            //Move penguin first time
+            penguinToMove = makeStep(penguinToMove, movesAvailable[chosenMove - 1].coordinates, player);
 
-        //Print board
-        scorePrint();
-        boardPrint();
-
-        //Rest of the moves
-        move = checkMove(penguinToMove, chosenMoveName);
-        while(ifStepForward(makeStepForwardCoordinates(penguinToMove, move))) {
-            penguinToMove = makeStep(penguinToMove, move.coordinates, player);
-            move = checkMove(penguinToMove, chosenMoveName);
+            //Print board
             scorePrint();
             boardPrint();
+
+            //Rest of the moves
+            move = checkMove(penguinToMove, chosenMoveName);
+            while (ifStepForward(makeStepForwardCoordinates(penguinToMove, move))) {
+                penguinToMove = makeStep(penguinToMove, move.coordinates, player);
+                move = checkMove(penguinToMove, chosenMoveName);
+                scorePrint();
+                boardPrint();
+            }
+
+            break;
+        } else {
+            printf("This penguin has no moves.\nPlease choose another penguin.\n");
+            penguinDelete(penguinToMove);
+            penguinToMove = penguinsChoose(player);
+
+            if (penguinToMove.x != -1 && penguinToMove.y != -1)
+                numberOfPossibleMoves = checkFirstMove(penguinToMove, pointerMovesAvailable);
+            else
+                printf("You have not penguins.\n");
+                break;
+          }
         }
 #else
     //nothing yet
@@ -54,6 +69,7 @@ void Movement(int player){
 
 coordinates penguinsChoose(int player) {
     coordinates penguinsOfPlayer[getPenguins()];
+    coordinates error = {-1, -1};
 
     int x, y, i, penguinsCount = 0;
     int chosenPenguin;
@@ -67,22 +83,27 @@ coordinates penguinsChoose(int player) {
         }
     }
 
-    printf("Choose coordinates:\n");
-    for(i = 0; i < penguinsCount; i++) {
+    if (penguinsCount == 0) {
+        return error;
+    } else {
+        printf("Choose coordinates:\n");
+        for (i = 0; i < penguinsCount; i++) {
             printf("%d) Penguin on [%d,%d]\n", i + 1, penguinsOfPlayer[i].x, penguinsOfPlayer[i].y);
+        }
+
+        do {
+            printf("Enter a number of penguin:\n");
+            scanf("%d", &chosenPenguin);
+
+            if (chosenPenguin > penguinsCount || chosenPenguin <= 0)
+                printf("Invalid number, please try again.\n");
+        } while (chosenPenguin > penguinsCount || chosenPenguin <= 0);
+
+        printf("You've chosen penguin %d on [%d,%d]\n", chosenPenguin, penguinsOfPlayer[chosenPenguin - 1].x,
+               penguinsOfPlayer[chosenPenguin - 1].y);
+
+        return penguinsOfPlayer[chosenPenguin - 1];
     }
-
-    do {
-        printf("Enter a number of penguin:\n");
-        scanf("%d", &chosenPenguin);
-
-        if (chosenPenguin > penguinsCount || chosenPenguin <= 0)
-            printf("Invalid number, please try again.\n");
-    } while (chosenPenguin > penguinsCount || chosenPenguin <= 0);
-
-    printf("You've chosen penguin %d on [%d,%d]\n", chosenPenguin, penguinsOfPlayer[chosenPenguin - 1].x, penguinsOfPlayer[chosenPenguin -1].y);
-
-    return penguinsOfPlayer[chosenPenguin - 1];
 }
 
 int moveChoose(int numberOfPossibleMoves) {
@@ -234,4 +255,8 @@ coordinates makeStep (coordinates penguin, coordinates floe, int player) {
     board[floe.x][floe.y] = board[penguin.x][penguin.y];
     board[penguin.x][penguin.y] = 0;
     return newPenguinPlace;
+}
+
+void penguinDelete(coordinates penguin) {
+    board[penguin.x][penguin.y] = 0;
 }

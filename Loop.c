@@ -14,6 +14,8 @@ void setPhase(char *P){
 }
 
 void Loop(){
+    int x,y,z, penguinsCount;
+
     if(phase == PLACEMENT){
         Placement(((turn - 1) % NR_OF_PLAYERS) + 1);
 #ifdef INTERACTIVE
@@ -34,7 +36,20 @@ void Loop(){
 #else
 #endif
         turn++;
-        if(turn == 6)   {
+
+        //calculate quantity of penguins on whole board
+        penguinsCount = 0;
+        for (z = 1; z <= NR_OF_PLAYERS; z++) {
+            for (y = 0; y < BOARD_SIZE_Y; y++) {
+                for (x = 0; x < BOARD_SIZE_X; x++) {
+                    if (board[x][y] == z + 3) {
+                        penguinsCount++;
+                    }
+                }
+            }
+        }
+
+        if(penguinsCount == 0)   {
             setRunning(0);
             printGameOver();
         }

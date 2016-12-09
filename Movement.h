@@ -22,5 +22,6 @@ int ifStepForward(coordinates step);
 coordinates makeStepForwardCoordinates(coordinates penguin, step step);
 step createMove(coordinates penguin, int shiftX, int shiftY, char* directionName);
 step checkMove(coordinates penguin, char* name);
+void penguinDelete(coordinates penguin);
 
 #endif // _MOVEMENT_

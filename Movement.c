@@ -110,29 +110,15 @@ int isFloeValid (coordinates floe) {
         return 0;
 }
 
-int addFloeToList(coordinates penguin, step *movesAvailable, int counter, int shiftX, int shiftY, char* name) {
-    coordinates currentFloe;
-    currentFloe.x = penguin.x + shiftX;
-    currentFloe.y = penguin.y + shiftY;
-    if (isFloeValid(currentFloe)) {
-        (movesAvailable + counter)->coordinates.x = currentFloe.x;
-        (movesAvailable + counter)->coordinates.y = currentFloe.y;
-        (movesAvailable + counter)->name = name;
-        (movesAvailable + counter)->stepForward.x = shiftX;
-        (movesAvailable + counter)->stepForward.y = shiftY;
-        counter++;
-    }
-
-    return counter;
-}
-
 int checkFirstMove(coordinates penguin, step *movesAvailable) {
     int counter = 0, i;
     char* names[6] = {"upper-left", "upper-right", "left", "right", "bottom-left", "bottom-right"};
+    step tempStep;
 
     for (i = 0; i < 6; i++) {
-        if (isFloeValid(checkMove(penguin, names[i]).coordinates)) {
-            movesAvailable[counter] = checkMove(penguin, names[i]);
+        tempStep = checkMove(penguin, names[i]);
+        if (tempStep.name != "error") {
+            *(movesAvailable + counter) = tempStep;
             counter++;
         }
     }
@@ -198,6 +184,10 @@ step createMove(coordinates penguin, int shiftX, int shiftY, char* directionName
         step.name = directionName;
         step.stepForward.x = shiftX;
         step.stepForward.y = shiftY;
+    } else {
+        step.coordinates.x = -1;
+        step.coordinates.y = -1;
+        step.name = "error";
     }
 
     return step;

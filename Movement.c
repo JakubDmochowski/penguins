@@ -93,8 +93,11 @@ coordinates penguinsChoose(int player) {
         }
 
         do {
-            printf("Enter a number of penguin:\n");
-            scanf("%d", &chosenPenguin);
+            do {
+                if (chosenPenguin == ERROR) printf("Invalid data. Please try again.\n");
+                printf("Enter a number of penguin:\n");
+                chosenPenguin = getIntFromUser();
+            } while (chosenPenguin == ERROR);
 
             if (chosenPenguin > penguinsCount || chosenPenguin <= 0)
                 printf("Invalid number, please try again.\n");
@@ -111,8 +114,11 @@ int moveChoose(int numberOfPossibleMoves) {
     int move;
 
     do {
-        printf("Please choose your first move:\n");
-        scanf("%d", &move);
+        do {
+            if (move == ERROR) printf("Invalid data. Please try again.\n");
+            printf("Please choose your first move:\n");
+            move = getIntFromUser();
+        } while (move == ERROR);
 
         if (move <= 0 || move > numberOfPossibleMoves)
             printf("Invalid number, please try again.\n");

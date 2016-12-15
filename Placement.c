@@ -5,10 +5,20 @@
 
 void Placement(int player){
     int x, y;
-    do{
+    do {
         #ifdef INTERACTIVE
-        printf("Type coordinates of place to put penguin: (X Y) (-1 -1 if no moves are possible)\n");
-        scanf("%d %d", &x, &y);
+        do {
+            if (x == ERROR) printf("Invalid data. Please try again.\n");
+            printf("Enter the X coordinate:\n");
+            x = getIntFromUser();
+        } while (x == ERROR);
+
+        do {
+            if (y == ERROR) printf("Invalid data. Please try again.\n");
+            printf("Enter the Y coordinate:\n");
+            y = getIntFromUser();
+        } while (y == ERROR);
+
         if(x == -1 && y == -1)return;
         clearscr();
         #else

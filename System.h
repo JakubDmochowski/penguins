@@ -11,5 +11,7 @@ int sys;
 void setSystem(char *env[]);
 int getSystem();
 void clearscr(void);
+int getIntFromUser();
+
 
 #endif // _SYSTEM_

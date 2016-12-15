@@ -16,8 +16,11 @@ void Init(char *Phase, int Penguins, char *input) {
 };
 
 void definePenguins() {
-    printf("Type number of penguins:\n");
-    scanf("%d", &penguins);
+    do {
+        if (penguins == ERROR) printf("Invalid data. Please try again.\n");
+        printf("Type number of penguins:\n");
+        penguins = getIntFromUser();
+    } while (penguins == ERROR);
     clearscr();
 };
 

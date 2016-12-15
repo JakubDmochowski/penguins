@@ -10,6 +10,7 @@ void printPenguins();
 int main(int argc, char *argv[], char *env[])
 {
     printPenguins();
+    printf("\n");
     setRunning(1);
     //setSystem(env);
     sys = "mac";

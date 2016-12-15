@@ -1,8 +1,10 @@
+#include "System.h"
 #include "Init.h"
 #include "FileHandler.h"
 #include "Placement.h"
 #include "Movement.h"
 #include "Loop.h"
+
 
 void Init(char *Phase, int Penguins, char *input) {
     setPenguins(Penguins);
@@ -16,7 +18,7 @@ void Init(char *Phase, int Penguins, char *input) {
 void definePenguins() {
     printf("Type number of penguins:\n");
     scanf("%d", &penguins);
-    system("cls");
+    clearscr();
 };
 
 int getPenguins(){

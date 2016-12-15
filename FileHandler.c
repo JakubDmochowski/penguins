@@ -40,29 +40,20 @@ void scorePrint(){
 
 
 void boardPrint() {
-    int x, y, score = 0;
+    int x, y;
 
     //Prints column's numbers
     printf("\t");
-    for (x = 0; x < BOARD_SIZE_X; x++, score = 0) {
-        for (y = 0; y < BOARD_SIZE_Y; y++) {
-            score += board[x][y];
-        }
-        if (score != 0) {
-            if (x < 10)
-                printf("   %d   %d", x, x);
-            if (x >= 10)
-                printf("  %d  %d", x, x);
-        }
+    for (x = 0; x < BOARD_SIZE_X; x++) {
+        if (x < 10)
+            printf("   %d   %d", x, x);
+        if (x >= 10)
+            printf("  %d  %d", x, x);
     }
     printf("\n\n");
 
     for (y = 0; y < BOARD_SIZE_Y; y++) {
-        for (x = 0, score = 0; x < BOARD_SIZE_Y; x++) {
-            score += board[x][y];
-        }
 
-       if (score != 0) {
             printf("\t");
             for (x = 0; x < BOARD_SIZE_X; ++x) {
 
@@ -108,7 +99,6 @@ void boardPrint() {
                     printf(" \\___/  ");
             }
             printf("\n");
-        }
     }
 }
 

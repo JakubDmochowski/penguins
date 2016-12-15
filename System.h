@@ -10,5 +10,6 @@ int sys;
 
 void setSystem(char *env[]);
 int getSystem();
+void clearscr(void);
 
 #endif // _SYSTEM_

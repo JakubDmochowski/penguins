@@ -4,6 +4,7 @@
 #include "Movement.h"
 #include "Define.h"
 #include "Init.h"
+#include "System.h"
 
 phase = PLACEMENT;
 turn = 1;
@@ -19,6 +20,7 @@ void Loop(){
     if(phase == PLACEMENT){
         Placement(((turn - 1) % NR_OF_PLAYERS) + 1);
 #ifdef INTERACTIVE
+        clearscr();
         scorePrint();
         boardPrint();
 #else
@@ -31,6 +33,7 @@ void Loop(){
         Movement(((turn - 1) % NR_OF_PLAYERS) + 1);
 
 #ifdef INTERACTIVE
+        clearscr();
         scorePrint();
         boardPrint();
 #else

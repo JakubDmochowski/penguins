@@ -3,6 +3,7 @@
 #include "FileHandler.h"
 #include "Init.h"
 #include "String.h"
+#include "System.h"
 
 void Movement(int player){
 #ifdef INTERACTIVE
@@ -14,6 +15,7 @@ void Movement(int player){
         int chosenMove;
         char *chosenMoveName;
         step move;
+
 
         //Print an info
         printf("Turn of P%d\n", player);
@@ -48,7 +50,6 @@ void Movement(int player){
                 scorePrint();
                 boardPrint();
             }
-
             break;
         } else {
             printf("This penguin has no moves.\nPlease choose another penguin.\n");

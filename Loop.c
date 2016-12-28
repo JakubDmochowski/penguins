@@ -6,6 +6,8 @@
 #include "Init.h"
 #include "System.h"
 
+#include <string.h>
+
 phase = PLACEMENT;
 turn = 1;
 
@@ -15,7 +17,7 @@ void setPhase(char *P){
 }
 
 void Loop(){
-    int x,y,z, penguinsCount;
+    int x,y,z, penguinsCount, winner = 0;
 
     if(phase == PLACEMENT){
         Placement(((turn - 1) % NR_OF_PLAYERS) + 1);
@@ -54,7 +56,14 @@ void Loop(){
 
         if(penguinsCount == 0)   {
             setRunning(0);
+            clearscr();
             printGameOver();
+
+            for (z = 0; z < NR_OF_PLAYERS; z++) {
+                if (score[z] > score[winner])
+                    winner = z;
+            }
+            printf("\n\n\n\nThe winner is PLAYER %d with score %d!\n\n\n\n", winner + 1, score[winner]);
         }
     }
 };
@@ -65,5 +74,5 @@ void printGameOver() {
                    "| |  __   /  \\  | \\  / | |__    | |  | \\ \\  / /| |__  | |__) |\n"
                    "| | |_ | / /\\ \\ | |\\/| |  __|   | |  | |\\ \\/ / |  __| |  _  / \n"
                    "| |__| |/ ____ \\| |  | | |____  | |__| | \\  /  | |____| | \\ \\ \n"
-                   " \\_____/_/    \\_\\_|  |_|______|  \\____/   \\/   |______|_|  \\_\\");
+                   " \\_____/_/    \\_\\_|  |_|______|  \\____/   \\/   |______|_|  \\_\\\n");
 }

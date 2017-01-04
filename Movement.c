@@ -8,7 +8,9 @@
 void Movement(int player){
 #ifdef INTERACTIVE
         int i;
+        static int lastFloeScore = 0;
         coordinates penguinToMove;
+        coordinates lastPenguinPosition;
         step movesAvailable[6];
         step *pointerMovesAvailable = movesAvailable;
         int numberOfPossibleMoves;
@@ -36,8 +38,10 @@ void Movement(int player){
             chosenMoveName = movesAvailable[chosenMove - 1].name; //needed for next moves
 
             //Move penguin first time
+            lastPenguinPosition = penguinToMove;
+            board[lastPenguinPosition.x][lastPenguinPosition.y] = lastFloeScore;
+            lastFloeScore = board[movesAvailable[chosenMove - 1].coordinates.x][movesAvailable[chosenMove - 1].coordinates.y];
             penguinToMove = makeStep(penguinToMove, movesAvailable[chosenMove - 1].coordinates, player);
-
             //Print board
             scorePrint();
             boardPrint();
@@ -45,11 +49,16 @@ void Movement(int player){
             //Rest of the moves
             move = checkMove(penguinToMove, chosenMoveName);
             while (ifStepForward(makeStepForwardCoordinates(penguinToMove, move))) {
-                penguinToMove = makeStep(penguinToMove, move.coordinates, player);
+                lastPenguinPosition = penguinToMove;
+                board[lastPenguinPosition.x][lastPenguinPosition.y] = lastFloeScore;
+                scoreAdd(player, -lastFloeScore);
+                lastFloeScore = board[move.coordinates.x][move.coordinates.y];
+                penguinToMove = makeStep(lastPenguinPosition, move.coordinates, player);
                 move = checkMove(penguinToMove, chosenMoveName);
                 scorePrint();
                 boardPrint();
             }
+            lastFloeScore = 0;
             break;
         } else {
             printf("This penguin has no moves.\nPlease choose another penguin.\n");
@@ -145,7 +154,7 @@ int checkFirstMove(coordinates penguin, step *movesAvailable) {
 
     for (i = 0; i < 6; i++) {
         tempStep = checkMove(penguin, names[i]);
-        if (tempStep.name != "error") {
+        if (strcmp(tempStep.name, "error")) {
             *(movesAvailable + counter) = tempStep;
             counter++;
         }
@@ -198,7 +207,7 @@ step checkMove(coordinates penguin, char* name) {
                 return createMove(penguin, 1, 1, "bottom-right");
         }
     }
-    
+
 }
 
 step createMove(coordinates penguin, int shiftX, int shiftY, char* directionName) {
@@ -259,8 +268,7 @@ coordinates makeStep (coordinates penguin, coordinates floe, int player) {
     newPenguinPlace.y = floe.y;
 
     scoreAdd(player, board[floe.x][floe.y]);
-    board[floe.x][floe.y] = board[penguin.x][penguin.y];
-    board[penguin.x][penguin.y] = 0;
+    board[floe.x][floe.y] = player + 3;
     return newPenguinPlace;
 }
 

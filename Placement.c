@@ -35,12 +35,7 @@ void Placement(int player){
                 boardPrint();
                 printf("Invalid Move\n");
             }
-        } else {
-            printf("No more placement options.\n");
-            setPhase("Movement");
-            break;
-        }
-    } while(1);
+        } while (1);
 };
 
 void placePenguin(int player,int x, int y){

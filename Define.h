@@ -6,7 +6,7 @@
 #define BOARD_SIZE_X 10
 #define BOARD_SIZE_Y 10
 
-#define INTERACTIVE
+//#define INTERACTIVE
 #define ERROR -11
 
 #endif // _DEFINE_

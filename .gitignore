@@ -6,3 +6,4 @@
 /CMakeLists.txt
 /cmake-build-debug/
 cmake-build-debug/
+TERM=xterm-256color

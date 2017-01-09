@@ -5,7 +5,7 @@
 #include "System.h"
 
 void scoreLoad(void *filename){
-    int player;
+    int player, i;
     int temp[1];
     char tmp[1];
     char Directory[128];
@@ -15,6 +15,14 @@ void scoreLoad(void *filename){
 
     strcat(Directory, filename);
     input = fopen(Directory, "r");
+    if (input == NULL) {
+        printf("There's no file with this name. We created loaded scores with 0\n");
+        for(i = 0; i < NR_OF_PLAYERS; i++) {
+            score[i] = 0;
+        }
+        return;
+    }
+
     player = 0;
     do{
         fscanf(input, "%d", temp);
@@ -123,7 +131,8 @@ void boardLoad(void *filename){
     strcat(Directory, filename);
     input = fopen(Directory, "r");
     if (input == NULL) {
-        printf("Error");
+        printf("There's no file with this name. We created new board\n");
+        boardRandom();
         return;
     }
     x = 0;

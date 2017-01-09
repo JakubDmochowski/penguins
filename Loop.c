@@ -9,7 +9,10 @@
 #include <string.h>
 
 phase = PLACEMENT;
+#ifdef INTERACTIVE
 turn = 1;
+#elseif
+#endif // INTERACTIVE
 
 void setPhase(char *P){
     if(strcmp(P, "movement") == 0) phase = MOVEMENT;
@@ -20,7 +23,7 @@ void Loop(){
     int x,y,z, penguinsCount, winner = 0;
 
     if(phase == PLACEMENT){
-        Placement(((turn - 1) % NR_OF_PLAYERS) + 1);
+        Placement(((turn - 1) % nrOfPlayers) + 1);
 #ifdef INTERACTIVE
         clearscr();
         scorePrint();
@@ -28,11 +31,11 @@ void Loop(){
 #else
 #endif
         //each player used all his possible penguins => next phase
-        if((getPenguins() == (turn / NR_OF_PLAYERS)) && ((turn % NR_OF_PLAYERS == 0))) phase = MOVEMENT;
+        if((getPenguins() == (turn / nrOfPlayers)) && ((turn % nrOfPlayers == 0))) phase = MOVEMENT;
         turn++;
     }
     if(phase == MOVEMENT) {
-        Movement(((turn - 1) % NR_OF_PLAYERS) + 1);
+        Movement(((turn - 1) % nrOfPlayers) + 1);
 
 #ifdef INTERACTIVE
         clearscr();
@@ -44,9 +47,9 @@ void Loop(){
 
         //calculate quantity of penguins on whole board
         penguinsCount = 0;
-        for (z = 1; z <= NR_OF_PLAYERS; z++) {
-            for (y = 0; y < BOARD_SIZE_Y; y++) {
-                for (x = 0; x < BOARD_SIZE_X; x++) {
+        for (z = 1; z <= nrOfPlayers; z++) {
+            for (y = 0; y < BoardMY; y++) {
+                for (x = 0; x < BoardMX; x++) {
                     if (board[x][y] == z + 3) {
                         penguinsCount++;
                     }
@@ -59,7 +62,7 @@ void Loop(){
             clearscr();
             printGameOver();
 
-            for (z = 0; z < NR_OF_PLAYERS; z++) {
+            for (z = 0; z < nrOfPlayers; z++) {
                 if (score[z] > score[winner])
                     winner = z;
             }

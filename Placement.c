@@ -7,8 +7,8 @@ void Placement(int player){
     int x, y, possiblePlacements;
     possiblePlacements = countPossiblePlacements();
     do {
-        #ifdef INTERACTIVE
         if (possiblePlacements) {
+        #ifdef INTERACTIVE
             do {
                 if (x == ERROR) printf("Invalid data. Please try again.\n");
                 printf("Enter the X coordinate:\n");
@@ -25,6 +25,7 @@ void Placement(int player){
             clearscr();
             #else
                 //here algorithm will tell x and y for penguin placement
+                x = 1; y = 1;
             #endif
             if (placementValid(x, y)) {
                 placePenguin(player, x, y);
@@ -35,7 +36,14 @@ void Placement(int player){
                 boardPrint();
                 printf("Invalid Move\n");
             }
-        } while (1);
+        } else {
+            printf("No more placement options.\n");
+            setPhase("Movement");
+            break;
+        }
+            setRunning(0);
+        break;
+    } while(1);
 };
 
 void placePenguin(int player,int x, int y){
@@ -51,8 +59,8 @@ int countPossiblePlacements(){
     int x;
     int y;
     int count = 0;
-    for (y = 0; y < BOARD_SIZE_Y; y++) {
-        for (x = 0; x < BOARD_SIZE_X; x++) {
+    for (y = 0; y < BoardMY; y++) {
+        for (x = 0; x < BoardMX; x++) {
             if (board[x][y] == 1) {
                 count++;
             }

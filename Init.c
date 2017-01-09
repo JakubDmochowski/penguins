@@ -7,10 +7,18 @@
 
 
 void Init(char *Phase, int Penguins, char *input) {
-    setPenguins(Penguins);
-    setPhase(Phase);
+    int i;
+    setPlayers(input);
+    getBoardSize(input);
+    score = (int *)malloc(nrOfPlayers * sizeof(int));
+    board = (int **)malloc(BoardMX * sizeof(int));
+    for(i = 0; i < BoardMX; i++){
+        board[i] = (int *)malloc(BoardMY * sizeof(int));
+    }
     boardLoad(input);
     scoreLoad(input);
+    setPenguins(Penguins);
+    setPhase(Phase);
     scorePrint();
     boardPrint();
 };

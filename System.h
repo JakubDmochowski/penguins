@@ -8,7 +8,6 @@ enum{
 
 int sys;
 
-void setSystem(char *env[]);
 int getSystem();
 void clearscr(void);
 int getIntFromUser();

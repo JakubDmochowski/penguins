@@ -11,8 +11,8 @@ int main(int argc, char *argv[], char *env[])
 {
     printPenguins();
     setRunning(1);
-    //setSystem(env);
-    sys = "mac";
+    sys = WINDOWS;
+    //sys = "mac";
 #ifndef INTERACTIVE
     if(argc == 5) {
         char *phase = argv[1]+6;
@@ -41,8 +41,6 @@ int main(int argc, char *argv[], char *env[])
         Loop();
     }
     boardOut(argv[4]);
-#ifndef INTERACTIVE
-#endif // INTERACTIVE
     return 0;
 }
 

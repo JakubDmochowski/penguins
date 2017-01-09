@@ -83,8 +83,8 @@ coordinates penguinsChoose(int player) {
 
     int x, y, i, penguinsCount = 0;
     int chosenPenguin;
-    for (y = 0; y < BOARD_SIZE_Y; y++) {
-        for (x = 0; x < BOARD_SIZE_X; x++) {
+    for (y = 0; y < BoardMY; y++) {
+        for (x = 0; x < BoardMX; x++) {
             if (board[x][y] == player + 3) {
                 penguinsOfPlayer[penguinsCount].x = x;
                 penguinsOfPlayer[penguinsCount].y = y;
@@ -138,7 +138,7 @@ int moveChoose(int numberOfPossibleMoves) {
 }
 
 int isFloeValid (coordinates floe) {
-    if (floe.x >= 0 && floe.y >= 0 && floe.x < BOARD_SIZE_X && floe.y < BOARD_SIZE_Y) {
+    if (floe.x >= 0 && floe.y >= 0 && floe.x < BoardMX && floe.y < BoardMY) {
         if (board[floe.x][floe.y] == 1 || board[floe.x][floe.y] == 2 || board[floe.x][floe.y] == 3)
             return 1;
         else

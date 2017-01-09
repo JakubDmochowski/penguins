@@ -3,11 +3,12 @@
 #include "FileHandler.h"
 #include "Define.h"
 #include "System.h"
+#include "Loop.h"
 
 void scoreLoad(void *filename){
-    int player, i;
-    int temp[1];
-    char tmp[1];
+    int player;
+    int temp, i;
+    char tmp;
     char Directory[128];
 
     if(sys == WINDOWS) strcpy(Directory, "./");
@@ -15,21 +16,21 @@ void scoreLoad(void *filename){
 
     strcat(Directory, filename);
     input = fopen(Directory, "r");
-    if (input == NULL) {
-        printf("There's no file with this name. We created loaded scores with 0\n");
-        for(i = 0; i < NR_OF_PLAYERS; i++) {
+    if(input == NULL){
+        printf("There's no file with this name. Scores initialized with 0's\n");
+        for(i = 0; i < nrOfPlayers; i++){
             score[i] = 0;
         }
-        return;
     }
-
     player = 0;
+    fscanf(input, "%d", &temp);
+    fscanf(input, "%c", &tmp);
     do{
-        fscanf(input, "%d", temp);
-        score[player] = temp[0];
+        fscanf(input, "%d", &temp);
+        score[player] = temp;
         player++;
-        fscanf(input, "%c", tmp);
-    }while(tmp[0] != ';');
+        fscanf(input, "%c", &tmp);
+    }while(tmp != ';');
     fclose(input);
 }
 
@@ -40,7 +41,7 @@ void scoreAdd(int player, int amount){
 void scorePrint(){
     int i;
     printf("\nSCORES:\n");
-    for(i = 0; i < NR_OF_PLAYERS; i++){
+    for(i = 0; i < nrOfPlayers; i++){
         printf("|   P%d: %d   |", i+1, score[i]);
     }
     printf("\n\n");
@@ -52,7 +53,7 @@ void boardPrint() {
 
     //Prints column's numbers
     printf("\t");
-    for (x = 0; x < BOARD_SIZE_X; x++) {
+    for (x = 0; x < BoardMX; x++) {
         if (x < 10)
             printf("   %d   %d", x, x);
         if (x >= 10)
@@ -60,10 +61,10 @@ void boardPrint() {
     }
     printf("\n\n");
 
-    for (y = 0; y < BOARD_SIZE_Y; y++) {
+    for (y = 0; y < BoardMY; y++) {
 
             printf("\t");
-            for (x = 0; x < BOARD_SIZE_X; ++x) {
+            for (x = 0; x < BoardMX; ++x) {
 
                 if ((x == 0) && (y % 2))
                     printf("    ");
@@ -79,7 +80,7 @@ void boardPrint() {
             printf("%d\t", y);
 
 
-            for (x = 0; x < BOARD_SIZE_X; ++x) {
+            for (x = 0; x < BoardMX; ++x) {
 
                 if ((x == 0) && (y % 2))
                     printf("    ");
@@ -96,7 +97,7 @@ void boardPrint() {
             printf("\n");
 
             printf("\t");
-            for (x = 0; x < BOARD_SIZE_X; ++x) {
+            for (x = 0; x < BoardMX; ++x) {
 
                 if ((x == 0) && (y % 2))
                     printf("    ");
@@ -113,15 +114,15 @@ void boardPrint() {
 void boardRandom() {
     int i, j;
     srand(time(NULL));
-    for (i = 0; i < BOARD_SIZE_Y; i++) {
-        for (j = 0; j < BOARD_SIZE_X; ++j) {
+    for (i = 0; i < BoardMY; i++) {
+        for (j = 0; j < BoardMX; ++j) {
             board[j][i] = rand() % 4;
         }
     }
 }
 
 void boardLoad(void *filename){
-    int x, y, fillx, filly;
+    int x, y;
     char temp;
     char Directory[128];
 
@@ -131,51 +132,34 @@ void boardLoad(void *filename){
     strcat(Directory, filename);
     input = fopen(Directory, "r");
     if (input == NULL) {
-        printf("There's no file with this name. We created new board\n");
         boardRandom();
         return;
     }
     x = 0;
     y = 0;
-    fillx = 0;
-    filly = 0;
-    //ignores score in file reading
+    //ignores scores and current turn in file reading
     while(temp != ';'){
         fscanf(input, "%c", &temp);
     }
     fscanf(input, "%c", &temp);
 
-    while(fscanf(input, "%c", &temp) != EOF){
-        if(temp == ',') continue;
-        if(temp == ';'){
-            y++;
-            x = 0;
+    while(fscanf(input, "%d", &(board[x][y])) > 0){
+        fscanf(input, "%c", &temp);
+        while(temp != ';'){
+            fscanf(input, "%d", &(board[++x][y]));
             fscanf(input, "%c", &temp);
-            while(fillx < BOARD_SIZE_X){
-                board[fillx][y] = 0;
-                fillx++;
-            }
-            fillx = 0;
-            filly++;
-            continue;
         }
-        board[x][y] = (temp - '0');
-        x++;
-        fillx++;
-    }
-    fillx = 0;
-    while(filly < BOARD_SIZE_Y){
-        while(fillx < BOARD_SIZE_X){
-            board[fillx][filly] = 0;
-            fillx++;
+        while(x < BoardMX - 1){
+            board[++x][y] = 0;
         }
-        fillx = 0;
-        filly++;
+        x = 0;
+        y++;
+        fscanf(input, "%c", &temp); // ignore new line character and clear ';' from temp
     }
     fclose(input);
 }
 void boardOut(void *filename){
-    int x, y, scP;
+    int x, y, i;
     char Directory[128];
 
     if(sys == WINDOWS) strcpy(Directory, "./");
@@ -183,26 +167,83 @@ void boardOut(void *filename){
     strcat(Directory, filename);
     output = fopen(Directory, "w");
     if (output == NULL) {
-        printf("Error");
+        printf("Output Error");
         return;
     }
 
     //print player scores
-    for(scP = 0; scP < NR_OF_PLAYERS; scP++){
-        fprintf(output, "%d", score[scP]);
-        if(scP + 1 != NR_OF_PLAYERS) fprintf(output, ",");
+    for(i = 0; i < nrOfPlayers; i++){
+        fprintf(output, "%d", score[i]);
+        if(i + 1 != nrOfPlayers) fprintf(output, ",");
         else fprintf(output, ";");
     }
     fprintf(output, "\n");
     // print board
 
-    for(y = 0; y < BOARD_SIZE_Y; y++){
-        for(x = 0; x < BOARD_SIZE_X; x++){
+    for(y = 0; y < BoardMY; y++){
+        for(x = 0; x < BoardMX; x++){
             fprintf(output, "%d", board[x][y]);
-            if(x + 1 != BOARD_SIZE_X) fprintf(output, ",");
+            if(x + 1 != BoardMX) fprintf(output, ",");
             else fprintf(output, ";");
         }
         fprintf(output, "\n");
     }
+    fclose(input);
+}
+
+void setPlayers(void *filename){
+    FILE *input;
+    char Directory[128];
+    int players = -1, tmp;
+    char temp;
+
+    if(sys == WINDOWS) strcpy(Directory, "./");
+    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    strcat(Directory, filename);
+    input = fopen(Directory, "r");
+
+    if (input == NULL) {
+        printf("Wrong input directory\n");
+        return;
+    }
+
+    while(temp != ';'){
+        fscanf(input, "%d", &tmp);
+        turn = tmp;
+        fscanf(input, "%c", &temp);
+        players++;
+    }
+    nrOfPlayers = players;
+    fclose(input);
+}
+
+void getBoardSize(char *filename){
+    FILE *input;
+    char Directory[128];
+    int maxX = 0, maxY = 0, x = 1, itemp;
+    char temp;
+
+    if(sys == WINDOWS) strcpy(Directory, "./");
+    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    strcat(Directory, filename);
+    input = fopen(Directory, "r");
+
+    //ignores scores and current turn in file reading
+    while(temp != ';'){
+        fscanf(input, "%c", &temp);
+    }
+    fscanf(input, "%c", &temp); // new line symbol
+
+    while(fscanf(input, "%d", &itemp) > 0){
+        while(fscanf(input, "%c", &temp) && temp != ';'){
+            fscanf(input, "%d", &itemp);
+            x++;
+        }
+        if(x > maxX) maxX = x;
+        x = 1;
+        maxY++;
+    }
+    BoardMX = maxX;
+    BoardMY = maxY;
     fclose(input);
 }

@@ -1,18 +1,24 @@
 #include <string.h>
 #include <time.h>
+
+#include "Phase_Loop.h"
 #include "FileHandler.h"
 #include "Define.h"
 #include "System.h"
-#include "Loop.h"
 
-void scoreLoad(void *filename){
+
+void scoreLoad(char *filename){
+    FILE *input;
     int player;
     int temp, i;
     char tmp;
     char Directory[128];
 
-    if(sys == WINDOWS) strcpy(Directory, "./");
-    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #ifdef _WIN32
+    strcpy(Directory, "./");
+    #else
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #endif
 
     strcat(Directory, filename);
     input = fopen(Directory, "r");
@@ -121,13 +127,17 @@ void boardRandom() {
     }
 }
 
-void boardLoad(void *filename){
+void boardLoad(char *filename){
+    FILE *input;
     int x, y;
     char temp;
     char Directory[128];
 
-    if(sys == WINDOWS) strcpy(Directory, "./");
-    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #ifdef _WIN32
+    strcpy(Directory, "./");
+    #else
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #endif
 
     strcat(Directory, filename);
     input = fopen(Directory, "r");
@@ -158,12 +168,17 @@ void boardLoad(void *filename){
     }
     fclose(input);
 }
-void boardOut(void *filename){
+void boardOut(char *filename){
+    FILE *output;
     int x, y, i;
     char Directory[128];
 
-    if(sys == WINDOWS) strcpy(Directory, "./");
-    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #ifdef _WIN32
+    strcpy(Directory, "./");
+    #else
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #endif
+
     strcat(Directory, filename);
     output = fopen(Directory, "w");
     if (output == NULL) {
@@ -188,17 +203,21 @@ void boardOut(void *filename){
         }
         fprintf(output, "\n");
     }
-    fclose(input);
+    fclose(output);
 }
 
-void setPlayers(void *filename){
+void setPlayers(char *filename){
     FILE *input;
     char Directory[128];
     int players = -1, tmp;
     char temp;
 
-    if(sys == WINDOWS) strcpy(Directory, "./");
-    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #ifdef _WIN32
+    strcpy(Directory, "./");
+    #else
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #endif
+
     strcat(Directory, filename);
     input = fopen(Directory, "r");
 
@@ -223,8 +242,12 @@ void getBoardSize(char *filename){
     int maxX = 0, maxY = 0, x = 1, itemp;
     char temp;
 
-    if(sys == WINDOWS) strcpy(Directory, "./");
-    else strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #ifdef _WIN32
+    strcpy(Directory, "./");
+    #else
+    strcpy(Directory, "/Users/emildzwonek/Documents/Studia/EPFU/Penguins/app/");
+    #endif
+
     strcat(Directory, filename);
     input = fopen(Directory, "r");
 

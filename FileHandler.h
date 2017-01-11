@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include "Define.h"
 
-FILE *input, *output;
-
 int nrOfPlayers;
 int BoardMX;
 int BoardMY;
@@ -14,15 +12,15 @@ int BoardMY;
 int *score;
 int **board;
 
-void scoreLoad(void *filename);
+void scoreLoad(char *filename);
 void scoreAdd(int player, int amount);
 void scorePrint();
 
 void boardRandom();
 void boardPrint();
-void boardLoad(void *filename);
-void boardOut(void *filename);
-void setPlayers(void *filename);
+void boardLoad(char *filename);
+void boardOut(char *filename);
+void setPlayers(char *filename);
 void getBoardSize(char *filename);
 
 

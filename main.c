@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Init.h"
-#include "Loop.h"
+
+#include "Phase_Init.h"
+#include "Phase_Loop.h"
 #include "FileHandler.h"
 #include "System.h"
+#include "Phase_Cleanup.h"
 
 void printPenguins();
 
-int main(int argc, char *argv[], char *env[])
+int main(int argc, char *argv[])
 {
     printPenguins();
     setRunning(1);
@@ -41,6 +43,7 @@ int main(int argc, char *argv[], char *env[])
         Loop();
     }
     boardOut(argv[4]);
+    Cleanup();
     return 0;
 }
 

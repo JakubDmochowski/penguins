@@ -11,9 +11,9 @@ void Init(char *Phase, int Penguins, char *input) {
     setPlayers(input);
     getBoardSize(input);
     score = (int *)malloc(nrOfPlayers * sizeof(int));
-    board = (int **)malloc(BoardMX * sizeof(int));
+    board = (int **)malloc(BoardMX * sizeof(long int));
     for(i = 0; i < BoardMX; i++){
-        board[i] = (int *)malloc(BoardMY * sizeof(int));
+        board[i] = (int *)malloc(BoardMY * sizeof(long int));
     }
     boardLoad(input);
     scoreLoad(input);

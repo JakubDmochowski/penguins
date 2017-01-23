@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 {
     printPenguins();
     setRunning(1);
-    sys = WINDOWS;
-    //sys = "mac";
+    //sys = WINDOWS;
+    sys = "mac";
 #ifndef INTERACTIVE
     if(argc == 5) {
         char *phase = argv[1]+6;

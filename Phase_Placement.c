@@ -9,7 +9,7 @@ void Placement(int player){
     possiblePlacements = countPossiblePlacements();
     //Variables to Algorithm:
     #ifndef INTERACTIVE
-    int i, j, k, counter, sum, tempSum;
+    int i, j, k, counter, sum;
     coordinates move, previousMove;
     step movesAvailable[6], nextMove;
     step *pointerMovesAvailable = movesAvailable;
@@ -50,7 +50,6 @@ void Placement(int player){
                             for (k = 0; k < counter; k++) {
                                 previousMove = move;
                                 sum += board[(movesAvailable+k)->coordinates.x][(movesAvailable+k)->coordinates.y];
-                                tempSum = 0;
                                 while(1) {
                                     nextMove = checkMove(previousMove, (movesAvailable+k)->name);
                                     previousMove = nextMove.coordinates;
@@ -58,8 +57,7 @@ void Placement(int player){
                                     if (nextMove.coordinates.x == -1 && nextMove.coordinates.y == -1)
                                         break;
 
-                                    tempSum += board[nextMove.coordinates.x][nextMove.coordinates.y];
-                                    sum += tempSum;
+                                    sum += board[nextMove.coordinates.x][nextMove.coordinates.y];
                                 }
 
                                 if (sum > best.sum) {

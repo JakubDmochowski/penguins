@@ -4,6 +4,7 @@
 #include "FileHandler.h"
 #include "String.h"
 #include "System.h"
+#include "math.h"
 
 void Movement(int player){
 #ifdef INTERACTIVE
@@ -73,7 +74,12 @@ void Movement(int player){
           }
         }
 #else
-    //nothing yet
+    Move bestMove;
+    bestMove = getBestMove(player);
+    makeStep(bestMove.Penguin, bestMove.destination, player);
+    board[bestMove.Penguin.x][bestMove.Penguin.y] = 0;
+    printf("bestMoveCoords: %d %d\nbestMovePenguin: %d %d", bestMove.destination.x, bestMove.destination.y, bestMove.Penguin.x, bestMove.Penguin.y);
+    //makeStep(getBestMovePenguin(), getBestMoveCoordinates(), player);
 #endif
 };
 
@@ -207,7 +213,6 @@ step checkMove(coordinates penguin, char* name) {
                 return createMove(penguin, 1, 1, "bottom-right");
         }
     }
-
 }
 
 step createMove(coordinates penguin, int shiftX, int shiftY, char* directionName) {
@@ -274,4 +279,141 @@ coordinates makeStep (coordinates penguin, coordinates floe, int player) {
 
 void penguinDelete(coordinates penguin) {
     board[penguin.x][penguin.y] = 0;
+}
+
+Move getBestMove(int player){
+    int i, x, y, nrOfMovesPossible;
+    Move bestMove;
+    int nrOfPenguins = 0;
+    penguin *penguins;
+    Move *possibleMoves;
+    double bestMoveValue = 0;
+    double moveValue = 0;
+    penguins = (penguin *)malloc(nrOfPenguins * sizeof(penguin));
+    if(penguins == null){
+        printf("Memory Allocation error in function getBestMove\n");
+        exit(2);
+    }
+    possibleMoves = (Move *)malloc(sizeof(Move));
+    if(possibleMoves == null){
+        printf("Memory Allocation error in function getBestMove\n");
+        exit(2);
+    }
+    for(x = 0; x < BoardMX; x++){
+        for(y = 0; y < BoardMY; y++){
+            if(board[x][y] == player + 3) {
+                penguins = (penguin *)realloc(penguins, ++nrOfPenguins * sizeof(penguin));
+                penguins[nrOfPenguins - 1].coordinates.x = x;
+                penguins[nrOfPenguins - 1].coordinates.y = y;
+                penguins[nrOfPenguins - 1].ID = nrOfPenguins - 1;
+            }
+        }
+    }
+    for(i = 0; i < nrOfPenguins; i++){
+        possibleMoves = getPossibleMoves(penguins[i].coordinates);
+        nrOfMovesPossible = getPossibleMovesNumber(penguins[i].coordinates);
+        for(x = 0; x < nrOfMovesPossible; x++){
+                //TODO checkPotential(coords) functionx
+            moveValue = movePotential(possibleMoves[x]);
+            if(moveValue > bestMoveValue) {
+                bestMoveValue = moveValue;
+                bestMove.Penguin = possibleMoves[x].Penguin;
+                bestMove.destination = possibleMoves[x].destination;
+            }
+        }
+    }
+    return bestMove;
+}
+
+Move *getPossibleMoves(coordinates Coords){
+    Move *PossibleMoves;
+    step temp;
+    step *Moves;
+    int nrOfMoves = 6;
+    int i;
+    Moves = (step *)calloc(nrOfMoves, sizeof(step));
+    if(Moves == null){
+        printf("Memory Allocation error in function getPossibleMoves\n");
+        exit(2);
+    }
+    nrOfMoves = checkFirstMove(Coords, Moves);
+    Moves = (step *)realloc(Moves, nrOfMoves * sizeof(step));
+    if(Moves == null){
+        printf("Memory Reallocation error in function getPossibleMoves\n");
+        exit(2);
+    }
+    for(i = 0; i < nrOfMoves; i++){
+        temp = checkMove(Moves[i].coordinates, Moves[i].name);
+        if(isFloeValid(temp.coordinates)){
+            nrOfMoves++;
+            Moves = (step *)realloc(Moves, nrOfMoves * sizeof(step));
+            if(Moves == null){
+                printf("Memory Reallocation error in function getPossibleMoves\n");
+                exit(2);
+            }
+            Moves[nrOfMoves - 1] = temp;
+        }
+    }
+    PossibleMoves = (Move *)malloc(nrOfMoves * sizeof(Move));
+    for(i = 0; i < nrOfMoves; i++){
+        PossibleMoves[i].Penguin.x = Moves[i].coordinates.x - Moves[i].stepForward.x;
+        PossibleMoves[i].Penguin.y = Moves[i].coordinates.y - Moves[i].stepForward.y;
+        PossibleMoves[i].destination.x = Moves[i].coordinates.x;
+        PossibleMoves[i].destination.y = Moves[i].coordinates.y;
+        free(Moves[i].name);
+    }
+    free(Moves);
+    return PossibleMoves;
+}
+
+int getPossibleMovesNumber(coordinates Coords){
+    step temp;
+    step *M;
+    int nrOfMoves = 6;
+    int i;
+    M = (step *)malloc(nrOfMoves * sizeof(step));
+    if(M == null){
+        printf("Memory Allocation error in function getPossibleMovesNumber\n");
+        exit(2);
+    }
+    nrOfMoves = checkFirstMove(Coords, M);
+    M = (step *)realloc(M, nrOfMoves * sizeof(step));
+    if(M == null){
+        printf("Memory Reallocation error in function getPossibleMovesNumber\n");
+        exit(2);
+    }
+    for(i = 0; i < nrOfMoves; i++){
+        temp = checkMove(M[i].coordinates, M[i].name);
+        if(isFloeValid(temp.coordinates)){
+            nrOfMoves++;
+            M = (step *)realloc(M, nrOfMoves * sizeof(step));
+            if(M == null){
+                printf("Memory Reallocation error in function getPossibleMovesNumber\n");
+                exit(2);
+            }
+            M[nrOfMoves - 1] = temp;
+        }
+    }
+    for(i = 0; i < nrOfMoves; i++){
+        free(M[i].name);
+    }
+    free(M);
+    return nrOfMoves;
+}
+
+double movePotential(Move Mv){
+    Move *possibleMoves;
+    double MovePotential = 0;
+    int i, x, y;
+    int nrOfMoves;
+    possibleMoves = getPossibleMoves(Mv.destination);
+    nrOfMoves = getPossibleMovesNumber(Mv.destination);
+    for(i = 0; i < nrOfMoves; i++){
+        x = possibleMoves[i].destination.x;
+        y = possibleMoves[i].destination.y;
+        MovePotential += board[possibleMoves[i].destination.x][possibleMoves[i].destination.y];
+    }
+    MovePotential = sqrt(MovePotential);
+    MovePotential += board[Mv.destination.x][Mv.destination.y];
+    return MovePotential;
 }

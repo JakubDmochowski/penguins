@@ -12,6 +12,16 @@ typedef struct {
     char* name;
 } step;
 
+typedef struct{
+    coordinates coordinates;
+    int ID;
+} penguin;
+
+typedef struct{
+    coordinates Penguin;
+    coordinates destination;
+} Move;
+
 void Movement(int player);
 coordinates penguinsChoose(int player);
 int isFloeValid (coordinates floe);
@@ -23,5 +33,10 @@ coordinates makeStepForwardCoordinates(coordinates penguin, step step);
 step createMove(coordinates penguin, int shiftX, int shiftY, char* directionName);
 step checkMove(coordinates penguin, char* name);
 void penguinDelete(coordinates penguin);
+Move getBestMove(int player);
+Move *getPossibleMoves(coordinates Coords);
+int getPossibleMovesNumber(coordinates Coords);
+double movePotential(Move Mv);
+
 
 #endif // _PHASE_MOVEMENT_

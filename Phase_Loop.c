@@ -11,7 +11,7 @@
 phase = PLACEMENT;
 #ifdef INTERACTIVE
 turn = 1;
-#elseif
+#else
 #endif // INTERACTIVE
 
 void setPhase(char *P){

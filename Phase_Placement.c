@@ -10,8 +10,8 @@ void Placement(int player){
     //Variables to Algorithm:
     #ifndef INTERACTIVE
     int i, j, k, counter, sum;
-    coordinates move, previousMove;
-    step movesAvailable[6], nextMove;
+    coordinates move;
+    step movesAvailable[6];
     step *pointerMovesAvailable = movesAvailable;
     struct best {
         int sum;
@@ -41,30 +41,20 @@ void Placement(int player){
                 //Algorithm: Choose place on the board, when you can earn the most fishes around
                 for (i = 1; i < BoardMY - 1; i++) {
                     for (j = 1; j < BoardMX - 1; j++) {
-                            move.x = j;
-                            move.y = i;
-                            sum = 0;
+                        move.x = j;
+                        move.y = i;
+                        sum = 0;
 
-                            counter = checkFirstMove(move, pointerMovesAvailable);
+                        counter = checkFirstMove(move, pointerMovesAvailable);
 
-                            for (k = 0; k < counter; k++) {
-                                previousMove = move;
-                                sum += board[(movesAvailable+k)->coordinates.x][(movesAvailable+k)->coordinates.y];
-                                while(1) {
-                                    nextMove = checkMove(previousMove, (movesAvailable+k)->name);
-                                    previousMove = nextMove.coordinates;
+                        for (k = 0; k < counter; k++) {
+                            sum += board[(movesAvailable+k)->coordinates.x][(movesAvailable+k)->coordinates.y];
 
-                                    if (nextMove.coordinates.x == -1 && nextMove.coordinates.y == -1)
-                                        break;
-
-                                    sum += board[nextMove.coordinates.x][nextMove.coordinates.y];
-                                }
-
-                                if (sum > best.sum) {
-                                    best.cords = move;
-                                    best.sum = sum;
-                                }
+                            if (sum > best.sum) {
+                                best.cords = move;
+                                best.sum = sum;
                             }
+                        }
                     }
                 }
                 printf("Penguin will move on [%d,%d]\n", best.cords.x, best.cords.y);

@@ -3,5 +3,6 @@
 
 #define NONINTERACTIVE
 #define ERROR -11
+#define null NULL
 
 #endif // _DEFINE_

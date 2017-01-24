@@ -228,7 +228,7 @@ void setPlayers(char *filename){
 
     while(temp != ';'){
         fscanf(input, "%d", &tmp);
-        turn = tmp;
+        turn = tmp - 1;
         fscanf(input, "%c", &temp);
         players++;
     }

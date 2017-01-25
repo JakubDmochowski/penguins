@@ -2,13 +2,14 @@
 #include "Phase_Init.h"
 #include "Define.h"
 #include "FileHandler.h"
+
 #include "String.h"
 #include "System.h"
 #include "math.h"
 
 void Movement(int player){
 #ifdef INTERACTIVE
-        int i;
+        int i, AI;
         static int lastFloeScore = 0;
         coordinates penguinToMove;
         coordinates lastPenguinPosition;
@@ -18,70 +19,79 @@ void Movement(int player){
         int chosenMove;
         char *chosenMoveName;
         step move;
-
+        AI = 0;
 
         //Print an info
         printf("Turn of P%d\n", player);
-
-        //Choose a penguin to move
-        penguinToMove = penguinsChoose(player);
-        numberOfPossibleMoves = checkFirstMove(penguinToMove, pointerMovesAvailable);
-        while (1) {
-        if (numberOfPossibleMoves != 0) {
-            printf("Possible moves:\n");
-            for (i = 0; i < numberOfPossibleMoves; i++) {
-                printf("%d) On floe [%d,%d] (%s)\n", i + 1, movesAvailable[i].coordinates.x,
-                       movesAvailable[i].coordinates.y, movesAvailable[i].name);
-            }
-
-            //Choose a direction
-            chosenMove = moveChoose(numberOfPossibleMoves);
-            chosenMoveName = movesAvailable[chosenMove - 1].name; //needed for next moves
-
-            //Move penguin first time
-            lastPenguinPosition = penguinToMove;
-            board[lastPenguinPosition.x][lastPenguinPosition.y] = lastFloeScore;
-            lastFloeScore = board[movesAvailable[chosenMove - 1].coordinates.x][movesAvailable[chosenMove - 1].coordinates.y];
-            penguinToMove = makeStep(penguinToMove, movesAvailable[chosenMove - 1].coordinates, player);
-            //Print board
-            scorePrint();
-            boardPrint();
-
-            //Rest of the moves
-            move = checkMove(penguinToMove, chosenMoveName);
-            while (ifStepForward(makeStepForwardCoordinates(penguinToMove, move))) {
-                lastPenguinPosition = penguinToMove;
-                board[lastPenguinPosition.x][lastPenguinPosition.y] = lastFloeScore;
-                scoreAdd(player, -lastFloeScore);
-                lastFloeScore = board[move.coordinates.x][move.coordinates.y];
-                penguinToMove = makeStep(lastPenguinPosition, move.coordinates, player);
-                move = checkMove(penguinToMove, chosenMoveName);
-                scorePrint();
-                boardPrint();
-            }
-            lastFloeScore = 0;
-            break;
-        } else {
-            printf("This penguin has no moves.\nPlease choose another penguin.\n");
-            penguinDelete(penguinToMove);
+        for(i = 0; i < nrOfPlayers; i++){
+            if(player == computerPlayers[i]) AI = 1;
+        }
+        if(AI == 0){
+            //Choose a penguin to move
             penguinToMove = penguinsChoose(player);
+            numberOfPossibleMoves = checkFirstMove(penguinToMove, pointerMovesAvailable);
+            while (1) {
+                if (numberOfPossibleMoves != 0) {
+                    printf("Possible moves:\n");
+                    for (i = 0; i < numberOfPossibleMoves; i++) {
+                        printf("%d) On floe [%d,%d] (%s)\n", i + 1, movesAvailable[i].coordinates.x,
+                               movesAvailable[i].coordinates.y, movesAvailable[i].name);
+                    }
 
-            if (penguinToMove.x != -1 && penguinToMove.y != -1)
-                numberOfPossibleMoves = checkFirstMove(penguinToMove, pointerMovesAvailable);
-            else
-                printf("You have not penguins.\n");
-                break;
-          }
+                    //Choose a direction
+                    chosenMove = moveChoose(numberOfPossibleMoves);
+                    chosenMoveName = movesAvailable[chosenMove - 1].name; //needed for next moves
+
+                    //Move penguin first time
+                    lastPenguinPosition = penguinToMove;
+                    board[lastPenguinPosition.x][lastPenguinPosition.y] = lastFloeScore;
+                    lastFloeScore = board[movesAvailable[chosenMove - 1].coordinates.x][movesAvailable[chosenMove - 1].coordinates.y];
+                    penguinToMove = makeStep(penguinToMove, movesAvailable[chosenMove - 1].coordinates, player);
+                    //Print board
+                    scorePrint();
+                    boardPrint();
+
+                    //Rest of the moves
+                    move = checkMove(penguinToMove, chosenMoveName);
+                    while (ifStepForward(makeStepForwardCoordinates(penguinToMove, move))) {
+                        lastPenguinPosition = penguinToMove;
+                        board[lastPenguinPosition.x][lastPenguinPosition.y] = lastFloeScore;
+                        scoreAdd(player, -lastFloeScore);
+                        lastFloeScore = board[move.coordinates.x][move.coordinates.y];
+                        penguinToMove = makeStep(lastPenguinPosition, move.coordinates, player);
+                        move = checkMove(penguinToMove, chosenMoveName);
+                        scorePrint();
+                        boardPrint();
+                    }
+                    lastFloeScore = 0;
+                    break;
+                } else {
+                    printf("This penguin has no moves.\nPlease choose another penguin.\n");
+                    penguinDelete(penguinToMove);
+                    penguinToMove = penguinsChoose(player);
+
+                    if (penguinToMove.x != -1 && penguinToMove.y != -1)
+                        numberOfPossibleMoves = checkFirstMove(penguinToMove, pointerMovesAvailable);
+                    else
+                        printf("You have no penguins.\n");
+                        break;
+                }
+            }
+        } else {
+            Move bestMove;
+            bestMove = getBestMove(player);
+            if(bestMove.destination.x != -1){
+                makeStep(bestMove.Penguin, bestMove.destination, player);
+                board[bestMove.Penguin.x][bestMove.Penguin.y] = 0;
+            }
+
         }
 #else
     Move bestMove;
     bestMove = getBestMove(player);
+    if(bestMove.destination.x == -1) continue;
     makeStep(bestMove.Penguin, bestMove.destination, player);
-    printf("%d\n", board[bestMove.Penguin.x][bestMove.Penguin.y]);
     board[bestMove.Penguin.x][bestMove.Penguin.y] = 0;
-    printf("%d\n", board[bestMove.Penguin.x][bestMove.Penguin.y]);
-    printf("bestMoveCoords: %d %d\nbestMovePenguin: %d %d", bestMove.destination.x, bestMove.destination.y, bestMove.Penguin.x, bestMove.Penguin.y);
-    //makeStep(getBestMovePenguin(), getBestMoveCoordinates(), player);
 #endif
 };
 
@@ -291,6 +301,8 @@ Move getBestMove(int player){
     Move *possibleMoves;
     double bestMoveValue = 0;
     double moveValue = 0;
+    bestMove.destination.x = -1;
+    bestMove.destination.y = -1;
     penguins = (penguin *)malloc(nrOfPenguins * sizeof(penguin));
     if(penguins == null){
         printf("Memory Allocation error in function getBestMove\n");
@@ -311,9 +323,16 @@ Move getBestMove(int player){
             }
         }
     }
+    if(nrOfPenguins == 0) {
+        return bestMove;
+    }
     for(i = 0; i < nrOfPenguins; i++){
         possibleMoves = getPossibleMoves(penguins[i].coordinates);
         nrOfMovesPossible = getPossibleMovesNumber(penguins[i].coordinates);
+        if(nrOfMovesPossible == 0){
+            penguinDelete(penguins[i].coordinates);
+            continue;
+        }
         for(x = 0; x < nrOfMovesPossible; x++){
             moveValue = movePotential(possibleMoves[x]);
             if(moveValue > bestMoveValue) {
@@ -338,7 +357,7 @@ Move *getPossibleMoves(coordinates Coords){
         exit(2);
     }
     nrOfMoves = checkFirstMove(Coords, Moves);
-    if(nrOfMoves == 0) return;
+    if(nrOfMoves == 0) return null;
     Moves = (step *)realloc(Moves, nrOfMoves * sizeof(step));
     if(Moves == null){
         printf("Memory Reallocation error in function getPossibleMoves\n");
@@ -379,6 +398,7 @@ int getPossibleMovesNumber(coordinates Coords){
         exit(2);
     }
     nrOfMoves = checkFirstMove(Coords, M);
+    if(nrOfMoves == 0) return 0;
     M = (step *)realloc(M, nrOfMoves * sizeof(step));
     if(M == null){
         printf("Memory Reallocation error in function getPossibleMovesNumber\n");
@@ -406,14 +426,15 @@ int getPossibleMovesNumber(coordinates Coords){
 double movePotential(Move Mv){
     Move *possibleMoves;
     double MovePotential = 0;
-    int i, x, y;
+    int i;
     int nrOfMoves;
     possibleMoves = getPossibleMoves(Mv.destination);
-    if(possibleMoves == null) return 0;
+    if(possibleMoves == null){
+        MovePotential += board[Mv.destination.x][Mv.destination.y];
+        return MovePotential;
+    }
     nrOfMoves = getPossibleMovesNumber(Mv.destination);
     for(i = 0; i < nrOfMoves; i++){
-        x = possibleMoves[i].destination.x;
-        y = possibleMoves[i].destination.y;
         MovePotential += board[possibleMoves[i].destination.x][possibleMoves[i].destination.y];
     }
     MovePotential = sqrt(MovePotential);

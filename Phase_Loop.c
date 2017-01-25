@@ -24,20 +24,20 @@ void Loop(){
     int x,y,z, penguinsCount, winner = 0;
 
     if(phase == PLACEMENT){
-        Placement(((turn - 1) % nrOfPlayers) + 1);
+        Placement((turn % nrOfPlayers) + 1);
 
         clearscr();
         scorePrint();
         boardPrint();
 
         //each player used all his possible penguins => next phase
-        if((getPenguins() == (turn / nrOfPlayers)) && ((turn % nrOfPlayers == 0))) phase = MOVEMENT;
+        if((getPenguins() == ((turn + 1) / nrOfPlayers)) && ((turn + 1) % nrOfPlayers == 0)) phase = MOVEMENT;
         turn++;
     }
     if(phase == MOVEMENT) {
-        Movement(((turn - 1) % nrOfPlayers) + 1);
+        Movement((turn % nrOfPlayers) + 1);
 
-        clearscr();
+        //clearscr();
         scorePrint();
         boardPrint();
         turn++;
@@ -56,7 +56,11 @@ void Loop(){
 
         if(penguinsCount == 0)   {
             setRunning(0);
+            /*
             clearscr();
+            scorePrint();
+            boardPrint();
+            */
             printGameOver();
 
             for (z = 0; z < nrOfPlayers; z++) {

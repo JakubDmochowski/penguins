@@ -6,7 +6,8 @@
 #include "FileHandler.h"
 
 void Init(char *Phase, int Penguins, char *input) {
-    int i;
+    int i, valid = -1;
+    char bufferClear;
     setPlayers(input);
     getBoardSize(input);
     score = (int *)calloc(nrOfPlayers, sizeof(int));
@@ -19,9 +20,21 @@ void Init(char *Phase, int Penguins, char *input) {
     setPenguins(Penguins);
     setPhase(Phase);
     #ifdef INTERACTIVE
-    scorePrint();
-    boardPrint();
-    #elseif
+        scorePrint();
+        boardPrint();
+        computerPlayers = (int *)calloc(nrOfPlayers, sizeof(int));
+        i = 0;
+        do{
+            do{
+                if(valid == 0)printf("Wrong input, players belong to integrals (1 - %d)\n", nrOfPlayers);
+                printf("Type which players should be controlled by AI (type 0 to end)\n");
+                valid = scanf("%d", &computerPlayers[i]);
+                if(computerPlayers[i] < 0 || computerPlayers[i] > nrOfPlayers) valid = 0;
+                scanf("%c", &bufferClear); //clear buffer
+            }while(!valid);
+        }while(computerPlayers[i++] != 0);
+
+    #else
 
     #endif //INTERACTIVE
 };

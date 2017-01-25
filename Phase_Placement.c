@@ -1,15 +1,14 @@
 #include "Phase_Placement.h"
 #include "FileHandler.h"
+#include "Phase_Init.h"
 #include "Define.h"
 #include "System.h"
 #include "Phase_Movement.h"
 
 void Placement(int player){
-    int x, y, possiblePlacements;
-    possiblePlacements = countPossiblePlacements();
+    int i, x, y, AI, possiblePlacements;
     //Variables to Algorithm:
-    #ifndef INTERACTIVE
-    int i, j, k, counter, temp;
+    int j, k, counter, temp;
     double sum;
     Move move;
     Move *movesAvailable;
@@ -17,26 +16,57 @@ void Placement(int player){
         double sum;
         coordinates cords;
     } best = {0, {0, 0}};
-    #endif
-
+    possiblePlacements = countPossiblePlacements();
+    AI = 0;
 
     do {
         if (possiblePlacements) {
         #ifdef INTERACTIVE
-            do {
-                if (x == ERROR) printf("Invalid data. Please try again.\n");
-                printf("Enter the X coordinate:\n");
-                x = getIntFromUser();
-            } while (x == ERROR);
 
-            do {
-                if (y == ERROR) printf("Invalid data. Please try again.\n");
-                printf("Enter the Y coordinate:\n");
-                y = getIntFromUser();
-            } while (y == ERROR);
+            for(i = 0; i < nrOfPlayers; i++){
+                if(player == computerPlayers[i]) AI = 1;
+            }
+            if(AI == 0){
+                do {
+                    if (x == ERROR) printf("Invalid data. Please try again.\n");
+                    printf("Enter the X coordinate:\n");
+                    x = getIntFromUser();
+                } while (x == ERROR);
 
-            if(x == -1 && y == -1)return;
-            clearscr();
+                do {
+                    if (y == ERROR) printf("Invalid data. Please try again.\n");
+                    printf("Enter the Y coordinate:\n");
+                    y = getIntFromUser();
+                } while (y == ERROR);
+
+                if(x == -1 && y == -1)return;
+                clearscr();
+            } else {
+                //Algorithm: Choose place on the board, when you can earn the most fishes around
+                for (i = 1; i < BoardMY - 1; i++) {
+                    for (j = 1; j < BoardMX - 1; j++) {
+                        move.Penguin.x = j;
+                        move.Penguin.y = i;
+                        sum = 0;
+                        if(board[j][i] != 1) continue;
+                        temp = board[j][i];
+                        board[j][i] = player;
+                        counter = getPossibleMovesNumber(move.Penguin);
+                        movesAvailable = (Move *)calloc(1, sizeof(Move));
+                        movesAvailable = getPossibleMoves(move.Penguin);
+                        for (k = 0; k < counter; k++) {
+                            sum = movePotential(movesAvailable[k]);
+
+                            if (sum > best.sum) {
+                                best.cords = move.Penguin;
+                                best.sum = sum;
+                            }
+                        }
+                        board[j][i] = temp;
+                    }
+                }
+                x = best.cords.x, y = best.cords.y;
+            }
         #else
                 //Algorithm: Choose place on the board, when you can earn the most fishes around
                 for (i = 1; i < BoardMY - 1; i++) {

@@ -185,7 +185,7 @@ void boardOut(char *filename){
         printf("Output Error");
         return;
     }
-
+    fprintf(output, "%d,", ((turn % nrOfPlayers) + 1));
     //print player scores
     for(i = 0; i < nrOfPlayers; i++){
         fprintf(output, "%d", score[i]);
@@ -209,7 +209,7 @@ void boardOut(char *filename){
 void setPlayers(char *filename){
     FILE *input;
     char Directory[128];
-    int players = -1, tmp;
+    int players = 0, tmp;
     char temp;
 
     #ifdef _WIN32
@@ -226,9 +226,12 @@ void setPlayers(char *filename){
         return;
     }
 
+    fscanf(input, "%d", &tmp);
+    turn = tmp - 1;
+    printf("turn: %d", turn);
+    fscanf(input, "%c", &temp);
     while(temp != ';'){
         fscanf(input, "%d", &tmp);
-        turn = tmp - 1;
         fscanf(input, "%c", &temp);
         players++;
     }

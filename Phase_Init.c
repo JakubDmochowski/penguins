@@ -5,22 +5,25 @@
 #include "System.h"
 #include "FileHandler.h"
 
-
 void Init(char *Phase, int Penguins, char *input) {
     int i;
     setPlayers(input);
     getBoardSize(input);
-    score = (int *)malloc(nrOfPlayers * sizeof(int));
-    board = (int **)malloc(BoardMX * sizeof(int));
+    score = (int *)calloc(nrOfPlayers, sizeof(int));
+    board = (int **)calloc(BoardMX, sizeof(int));
     for(i = 0; i < BoardMX; i++){
-        board[i] = (int *)malloc(BoardMY * sizeof(int));
+        board[i] = (int *)calloc(BoardMY, sizeof(int));
     }
     boardLoad(input);
     scoreLoad(input);
     setPenguins(Penguins);
     setPhase(Phase);
+    #ifdef INTERACTIVE
     scorePrint();
     boardPrint();
+    #elseif
+
+    #endif //INTERACTIVE
 };
 
 void definePenguins() {

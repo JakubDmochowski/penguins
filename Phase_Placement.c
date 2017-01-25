@@ -9,12 +9,12 @@ void Placement(int player){
     possiblePlacements = countPossiblePlacements();
     //Variables to Algorithm:
     #ifndef INTERACTIVE
-    int i, j, k, counter, sum;
-    coordinates move;
-    step movesAvailable[6];
-    step *pointerMovesAvailable = movesAvailable;
+    int i, j, k, counter, temp;
+    double sum;
+    Move move;
+    Move *movesAvailable;
     struct best {
-        int sum;
+        double sum;
         coordinates cords;
     } best = {0, {0, 0}};
     #endif
@@ -37,29 +37,32 @@ void Placement(int player){
 
             if(x == -1 && y == -1)return;
             clearscr();
-            #else
+        #else
                 //Algorithm: Choose place on the board, when you can earn the most fishes around
                 for (i = 1; i < BoardMY - 1; i++) {
                     for (j = 1; j < BoardMX - 1; j++) {
-                        move.x = j;
-                        move.y = i;
+                        move.Penguin.x = j;
+                        move.Penguin.y = i;
                         sum = 0;
-
-                        counter = checkFirstMove(move, pointerMovesAvailable);
-
+                        if(board[j][i] != 1) continue;
+                        temp = board[j][i];
+                        board[j][i] = player;
+                        counter = getPossibleMovesNumber(move.Penguin);
+                        movesAvailable = (Move *)calloc(1, sizeof(Move));
+                        movesAvailable = getPossibleMoves(move.Penguin);
                         for (k = 0; k < counter; k++) {
-                            sum += board[(movesAvailable+k)->coordinates.x][(movesAvailable+k)->coordinates.y];
+                            sum = movePotential(movesAvailable[k]);
 
                             if (sum > best.sum) {
-                                best.cords = move;
+                                best.cords = move.Penguin;
                                 best.sum = sum;
                             }
                         }
+                        board[j][i] = temp;
                     }
                 }
-                printf("Penguin will move on [%d,%d]\n", best.cords.x, best.cords.y);
                 x = best.cords.x, y = best.cords.y;
-            #endif
+        #endif
             if (placementValid(x, y)) {
                 placePenguin(player, x, y);
                 possiblePlacements--;

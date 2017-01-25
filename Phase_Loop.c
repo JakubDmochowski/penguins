@@ -20,16 +20,16 @@ void setPhase(char *P){
 }
 
 void Loop(){
+#ifdef INTERACTIVE
     int x,y,z, penguinsCount, winner = 0;
 
     if(phase == PLACEMENT){
         Placement(((turn - 1) % nrOfPlayers) + 1);
-#ifdef INTERACTIVE
+
         clearscr();
         scorePrint();
         boardPrint();
-#else
-#endif
+
         //each player used all his possible penguins => next phase
         if((getPenguins() == (turn / nrOfPlayers)) && ((turn % nrOfPlayers == 0))) phase = MOVEMENT;
         turn++;
@@ -37,12 +37,9 @@ void Loop(){
     if(phase == MOVEMENT) {
         Movement(((turn - 1) % nrOfPlayers) + 1);
 
-#ifdef INTERACTIVE
         clearscr();
         scorePrint();
         boardPrint();
-#else
-#endif
         turn++;
 
         //calculate quantity of penguins on whole board
@@ -69,6 +66,17 @@ void Loop(){
             printf("\n\n\n\nThe winner is PLAYER %d with score %d!\n\n\n\n", winner + 1, score[winner]);
         }
     }
+#else
+
+    if(phase == PLACEMENT){
+        Placement(turn + 1);
+    } else if(phase == MOVEMENT){
+        Movement(turn + 1);
+    }
+    turn++;
+    setRunning(0);
+
+#endif //INTERACTIVE
 };
 
 void printGameOver() {

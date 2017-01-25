@@ -77,7 +77,9 @@ void Movement(int player){
     Move bestMove;
     bestMove = getBestMove(player);
     makeStep(bestMove.Penguin, bestMove.destination, player);
+    printf("%d\n", board[bestMove.Penguin.x][bestMove.Penguin.y]);
     board[bestMove.Penguin.x][bestMove.Penguin.y] = 0;
+    printf("%d\n", board[bestMove.Penguin.x][bestMove.Penguin.y]);
     printf("bestMoveCoords: %d %d\nbestMovePenguin: %d %d", bestMove.destination.x, bestMove.destination.y, bestMove.Penguin.x, bestMove.Penguin.y);
     //makeStep(getBestMovePenguin(), getBestMoveCoordinates(), player);
 #endif
@@ -313,11 +315,10 @@ Move getBestMove(int player){
         possibleMoves = getPossibleMoves(penguins[i].coordinates);
         nrOfMovesPossible = getPossibleMovesNumber(penguins[i].coordinates);
         for(x = 0; x < nrOfMovesPossible; x++){
-                //TODO checkPotential(coords) functionx
             moveValue = movePotential(possibleMoves[x]);
             if(moveValue > bestMoveValue) {
                 bestMoveValue = moveValue;
-                bestMove.Penguin = possibleMoves[x].Penguin;
+                bestMove.Penguin = penguins[i].coordinates;
                 bestMove.destination = possibleMoves[x].destination;
             }
         }
@@ -337,6 +338,7 @@ Move *getPossibleMoves(coordinates Coords){
         exit(2);
     }
     nrOfMoves = checkFirstMove(Coords, Moves);
+    if(nrOfMoves == 0) return;
     Moves = (step *)realloc(Moves, nrOfMoves * sizeof(step));
     if(Moves == null){
         printf("Memory Reallocation error in function getPossibleMoves\n");
@@ -407,6 +409,7 @@ double movePotential(Move Mv){
     int i, x, y;
     int nrOfMoves;
     possibleMoves = getPossibleMoves(Mv.destination);
+    if(possibleMoves == null) return 0;
     nrOfMoves = getPossibleMovesNumber(Mv.destination);
     for(i = 0; i < nrOfMoves; i++){
         x = possibleMoves[i].destination.x;

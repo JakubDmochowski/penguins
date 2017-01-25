@@ -1,20 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "Phase_Init.h"
 #include "Phase_Loop.h"
+#include "Phase_Cleanup.h"
 #include "FileHandler.h"
 #include "System.h"
-#include "Phase_Cleanup.h"
 
 void printPenguins();
 
 int main(int argc, char *argv[])
 {
-    printPenguins();
     setRunning(1);
-    //sys = WINDOWS;
-    sys = "mac";
+    sys = WINDOWS;
+    //sys = "mac";
 #ifndef INTERACTIVE
     if(argc == 5) {
         char *phase = argv[1]+6;
@@ -26,6 +24,8 @@ int main(int argc, char *argv[])
     printf("NOT ENOUGH ARGUMENTS");
     }
 #else
+    printPenguins();
+
     if(argc == 1) {
         definePenguins();
         boardRandom();
